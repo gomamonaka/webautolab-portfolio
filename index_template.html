@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web制作・業務自動化 ポートフォリオ</title>
+<meta name="description" content="小規模ビジネスのためのWeb制作・業務自動化。LP制作、Excel・CSVデータ整理/自動レポート、Webスクレイピングの実績サンプルと料金のご案内。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0d1b34;
+    --navy-deep:#081226;
+    --navy-soft:#1c3157;
+    --white:#ffffff;
+    --paper:#f6f8fb;
+    --ink:#1b2635;
+    --ink-soft:#5b6778;
+    --accent:#12a894;
+    --accent-deep:#0c8a79;
+    --accent-soft:#e4f7f4;
+    --border:#e3e8f0;
+    --shadow: 0 14px 34px rgba(13,27,52,.10);
+    --radius: 16px;
+    --maxw: 1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Noto Sans JP',"Hiragino Sans","Yu Gothic",sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.8;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  section{padding:96px 0;}
+  h1,h2,h3{font-weight:700;letter-spacing:.01em;}
+  .eyebrow{
+    display:inline-block;
+    font-size:.8rem;
+    font-weight:700;
+    letter-spacing:.12em;
+    color:var(--accent-deep);
+    background:var(--accent-soft);
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+  .section-title{
+    font-size:clamp(1.5rem,3.2vw,2.1rem);
+    color:var(--navy);
+    margin-bottom:10px;
+  }
+  .section-lead{
+    color:var(--ink-soft);
+    font-size:.98rem;
+    max-width:640px;
+    margin-bottom:48px;
+  }
+
+  /* --- header --- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:16px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{
+    font-weight:900;
+    font-size:1.05rem;
+    color:var(--navy);
+    letter-spacing:.02em;
+  }
+  .brand span{color:var(--accent);}
+  .nav-links{
+    display:flex;
+    gap:28px;
+    font-size:.9rem;
+    font-weight:500;
+  }
+  .nav-links a{color:var(--ink-soft);transition:color .2s;}
+  .nav-links a:hover{color:var(--accent-deep);}
+  .nav-cta{
+    display:inline-block;
+    background:var(--navy);
+    color:var(--white);
+    padding:9px 18px;
+    border-radius:999px;
+    font-size:.85rem;
+    font-weight:700;
+    transition:background .2s;
+  }
+  .nav-cta:hover{background:var(--accent-deep);}
+
+  /* --- hero --- */
+  .hero{
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy-deep) 100%);
+    color:var(--white);
+    padding:120px 0 100px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    right:-120px;
+    top:-120px;
+    width:420px;
+    height:420px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(18,168,148,.35),transparent 70%);
+  }
+  .hero-inner{position:relative;z-index:1;max-width:760px;}
+  .hero h1{
+    font-size:clamp(1.9rem,4.6vw,3.1rem);
+    line-height:1.5;
+    margin-bottom:22px;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--accent);
+  }
+  .hero p.sub{
+    color:#c7d2e6;
+    font-size:1.02rem;
+    margin-bottom:34px;
+    max-width:560px;
+  }
+  .pills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:40px;
+  }
+  .pill{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);
+    color:var(--white);
+    padding:9px 18px;
+    border-radius:999px;
+    font-size:.88rem;
+    font-weight:500;
+  }
+  .hero-ctas{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:14px 28px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:.94rem;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .btn-accent{
+    background:var(--accent);
+    color:var(--navy-deep);
+  }
+  .btn-accent:hover{background:#17c2ab;transform:translateY(-2px);box-shadow:0 10px 24px rgba(18,168,148,.35);}
+  .btn-outline{
+    background:transparent;
+    color:var(--white);
+    border:1px solid rgba(255,255,255,.4);
+  }
+  .btn-outline:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}
+
+  /* --- works --- */
+  .work-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:56px;
+  }
+  .work-card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .work-head{
+    padding:28px 32px 0;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .work-tag{
+    display:inline-block;
+    font-size:.76rem;
+    font-weight:700;
+    color:var(--accent-deep);
+    background:var(--accent-soft);
+    padding:4px 12px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+  .work-title{
+    font-size:1.35rem;
+    color:var(--navy);
+  }
+  .work-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn-sm{
+    padding:9px 18px;
+    font-size:.82rem;
+    border-radius:999px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  .btn-navy{background:var(--navy);color:var(--white);}
+  .btn-navy:hover{background:var(--accent-deep);}
+  .btn-ghost{background:var(--paper);color:var(--navy);border:1px solid var(--border);}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent-deep);}
+  .work-body{padding:24px 32px 32px;}
+  .work-feature-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:18px 0 26px;
+  }
+  .feature-chip{
+    font-size:.8rem;
+    color:var(--navy);
+    background:var(--paper);
+    border:1px solid var(--border);
+    padding:6px 14px;
+    border-radius:999px;
+  }
+  .feature-chip::before{content:"✓ ";color:var(--accent-deep);font-weight:700;}
+
+  /* LP thumbnail */
+  .lp-preview-wrap{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    align-items:flex-start;
+  }
+  .iframe-thumb{
+    width:340px;
+    height:420px;
+    flex:none;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    position:relative;
+    background:var(--paper);
+  }
+  .iframe-thumb iframe{
+    width:680px;
+    height:840px;
+    border:0;
+    transform:scale(0.5);
+    transform-origin:top left;
+  }
+  .lp-preview-note{
+    flex:1;
+    min-width:240px;
+    color:var(--ink-soft);
+    font-size:.9rem;
+  }
+
+  /* tables */
+  .table-scroll{
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin:14px 0 22px;
+  }
+  table.data-table{
+    border-collapse:collapse;
+    width:100%;
+    font-size:.82rem;
+    min-width:560px;
+  }
+  table.data-table th{
+    background:var(--navy);
+    color:var(--white);
+    text-align:left;
+    padding:10px 14px;
+    white-space:nowrap;
+    font-weight:700;
+  }
+  table.data-table td{
+    padding:9px 14px;
+    border-top:1px solid var(--border);
+    white-space:nowrap;
+    color:var(--ink);
+  }
+  table.data-table tbody tr:nth-child(even){background:var(--paper);}
+  table.before-table th{background:#8a4b3b;}
+  table.after-table th{background:var(--accent-deep);}
+  .subtable-title{
+    font-weight:700;
+    color:var(--navy);
+    margin:26px 0 4px;
+    font-size:.98rem;
+  }
+  .ba-cols{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:0;
+  }
+  .stat-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    margin:18px 0 6px;
+  }
+  .stat-box{
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 20px;
+    min-width:130px;
+  }
+  .stat-box .num{font-size:1.3rem;font-weight:900;color:var(--navy);}
+  .stat-box .lbl{font-size:.76rem;color:var(--ink-soft);margin-top:2px;}
+  .note-box{
+    background:var(--accent-soft);
+    border:1px solid #bfe8e2;
+    border-radius:10px;
+    padding:14px 18px;
+    font-size:.84rem;
+    color:var(--accent-deep);
+    margin-top:18px;
+  }
+
+  /* --- pricing --- */
+  .price-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:24px;
+  }
+  .price-card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:32px 28px;
+    box-shadow:var(--shadow);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+  }
+  .price-badge{
+    position:absolute;
+    top:-12px;
+    right:20px;
+    background:var(--accent);
+    color:var(--navy-deep);
+    font-size:.72rem;
+    font-weight:700;
+    padding:5px 12px;
+    border-radius:999px;
+    box-shadow:0 4px 10px rgba(18,168,148,.35);
+  }
+  .price-card h3{color:var(--navy);font-size:1.15rem;margin-bottom:14px;}
+  .price-value{
+    font-size:1.9rem;
+    font-weight:900;
+    color:var(--navy);
+    margin-bottom:2px;
+  }
+  .price-value span{font-size:.9rem;font-weight:500;color:var(--ink-soft);}
+  .price-days{
+    font-size:.82rem;
+    color:var(--accent-deep);
+    font-weight:700;
+    margin-bottom:18px;
+  }
+  .price-card ul{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);}
+  .price-card li{
+    font-size:.85rem;
+    color:var(--ink-soft);
+    padding:4px 0;
+  }
+  .price-card li::before{content:"・";color:var(--accent-deep);}
+
+  /* --- flow --- */
+  .flow-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+  }
+  .flow-card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:26px 22px;
+    position:relative;
+  }
+  .flow-num{
+    font-size:1.6rem;
+    font-weight:900;
+    color:var(--accent-soft);
+    -webkit-text-stroke:1.5px var(--accent);
+    margin-bottom:10px;
+  }
+  .flow-card h3{color:var(--navy);font-size:1.02rem;margin-bottom:8px;}
+  .flow-card p{color:var(--ink-soft);font-size:.85rem;}
+
+  /* --- footer --- */
+  footer{
+    background:var(--navy-deep);
+    color:#c7d2e6;
+    padding:56px 0 40px;
+  }
+  .footer-inner{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:center;
+    gap:24px;
+  }
+  .footer-brand{
+    font-weight:900;
+    color:var(--white);
+    font-size:1.05rem;
+  }
+  .footer-brand span{color:var(--accent);}
+  .footer-note{font-size:.84rem;color:#8b98b3;max-width:480px;}
+  .footer-ctas{display:flex;gap:12px;flex-wrap:wrap;}
+  .footer-bottom{
+    margin-top:36px;
+    padding-top:24px;
+    border-top:1px solid rgba(255,255,255,.08);
+    font-size:.76rem;
+    color:#6f7d9a;
+    text-align:center;
+  }
+
+  /* --- reveal animation --- */
+  .reveal{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .reveal.is-visible{opacity:1;transform:none;}
+
+  @media(max-width:720px){
+    .nav-links{display:none;}
+    section{padding:64px 0;}
+    .work-head{padding:24px 22px 0;}
+    .work-body{padding:20px 22px 26px;}
+    .iframe-thumb{width:100%;max-width:340px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">Web制作<span>×</span>業務自動化</div>
+    <nav class="nav-links">
+      <a href="#works">実績サンプル</a>
+      <a href="#pricing">料金</a>
+      <a href="#flow">進め方</a>
+    </nav>
+    <a class="nav-cta" href="#" data-attr="coconala-nav" target="_blank" rel="noopener">ご相談はこちら</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <h1>小規模ビジネスのための<br><em>Web制作・業務自動化</em></h1>
+    <p class="sub">LPの制作から、日々のExcel・CSV作業の自動化、Webからのデータ収集まで。小さなチームや個人事業の「困った」をコードでまとめて解決します。</p>
+    <div class="pills">
+      <span class="pill">LP制作</span>
+      <span class="pill">Excel・CSVデータ整理 / 自動レポート</span>
+      <span class="pill">Webスクレイピング</span>
+    </div>
+    <div class="hero-ctas">
+      <a class="btn btn-accent" href="#" data-attr="coconala-hero" target="_blank" rel="noopener">ココナラで相談する</a>
+      <a class="btn btn-outline" href="#" data-attr="lancers-hero" target="_blank" rel="noopener">ランサーズで相談する</a>
+    </div>
+  </div>
+</section>
+
+<section id="works">
+  <div class="wrap">
+    <span class="eyebrow reveal">WORKS</span>
+    <h2 class="section-title reveal">実績サンプル</h2>
+    <p class="section-lead reveal">実際に手を動かして作った3種類のサンプルです。コードやファイルはすべてダウンロード・閲覧できます。</p>
+
+    <div class="work-grid">
+
+      <!-- LP制作 -->
+      <article class="work-card reveal">
+        <div class="work-head">
+          <div>
+            <span class="work-tag">LP制作</span>
+            <h3 class="work-title">カフェ向け ランディングページ</h3>
+          </div>
+          <div class="work-actions">
+            <a class="btn-sm btn-navy" href="lp-sample/index.html" target="_blank" rel="noopener">デモを見る ↗</a>
+          </div>
+        </div>
+        <div class="work-body">
+          <div class="lp-preview-wrap">
+            <div class="iframe-thumb">
+              <iframe src="lp-sample/index.html" loading="lazy" title="LP制作サンプルプレビュー"></iframe>
+            </div>
+            <div class="lp-preview-note">
+              <p>架空の「珈琲と焼き菓子の店」を題材にした1ページ完結型LPです。ヒーロー、こだわり紹介、メニュー、アクセス、ご予約フォームまでを一気通貫でデザイン・実装しています。</p>
+              <div class="work-feature-list">
+                <span class="feature-chip">レスポンシブ</span>
+                <span class="feature-chip">フォーム</span>
+                <span class="feature-chip">スクロールアニメーション</span>
+                <span class="feature-chip">OGP対応</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Excel自動化 -->
+      <article class="work-card reveal">
+        <div class="work-head">
+          <div>
+            <span class="work-tag">Excel自動化</span>
+            <h3 class="work-title">売上データ クリーニング & 自動レポート</h3>
+          </div>
+          <div class="work-actions">
+            <a class="btn-sm btn-navy" href="excel-tool/output/売上レポート.xlsx" target="_blank" rel="noopener">レポートDL</a>
+            <a class="btn-sm btn-ghost" href="excel-tool/input/売上データ_raw.csv" target="_blank" rel="noopener">元CSV DL</a>
+            <a class="btn-sm btn-ghost" href="excel-tool/clean_and_report.py" target="_blank" rel="noopener">ソースを見る</a>
+          </div>
+        </div>
+        <div class="work-body">
+          <p>日付表記の統一・全角→半角変換・重複や空行の除去・表記ゆれのある商品名の統一・テキスト単価の数値化までを自動化し、装飾済みのExcelレポート(4シート)を出力します。</p>
+          <div class="work-feature-list">
+            <span class="feature-chip">日付表記統一</span>
+            <span class="feature-chip">表記ゆれ統一</span>
+            <span class="feature-chip">重複・空行除去</span>
+            <span class="feature-chip">集計 + グラフ</span>
+          </div>
+
+          <div class="subtable-title">Before（生データ抜粋・5行）</div>
+          <div class="table-scroll">{{before_table}}</div>
+
+          <div class="subtable-title">After（クリーニング後・対応する5行）</div>
+          <div class="table-scroll">{{after_table}}</div>
+
+          <div class="subtable-title">整形済データ（先頭8行）</div>
+          <div class="table-scroll">{{seikei_table}}</div>
+
+          <div class="subtable-title">月別集計</div>
+          <div class="table-scroll">{{monthly_table}}</div>
+
+          <div class="subtable-title">クリーニングログ</div>
+          <div class="table-scroll">{{log_table}}</div>
+        </div>
+      </article>
+
+      <!-- スクレイピング -->
+      <article class="work-card reveal">
+        <div class="work-head">
+          <div>
+            <span class="work-tag">スクレイピング</span>
+            <h3 class="work-title">書籍サイト データ収集</h3>
+          </div>
+          <div class="work-actions">
+            <a class="btn-sm btn-navy" href="scraper/output/books.csv" target="_blank" rel="noopener">CSV DL</a>
+            <a class="btn-sm btn-ghost" href="scraper/output/books.xlsx" target="_blank" rel="noopener">Excel DL</a>
+            <a class="btn-sm btn-ghost" href="scraper/scrape_books.py" target="_blank" rel="noopener">ソースを見る</a>
+          </div>
+        </div>
+        <div class="work-body">
+          <p>カタログページを巡回し、タイトル・価格・評価・在庫状況・詳細URLを収集。レート制限とリトライ処理を備え、CSV / Excel 両方の形式で出力します。</p>
+          <div class="stat-row">
+            <div class="stat-box"><div class="num">{{books_total}}</div><div class="lbl">取得件数</div></div>
+            <div class="stat-box"><div class="num">3ページ</div><div class="lbl">巡回ページ数</div></div>
+            <div class="stat-box"><div class="num">{{books_avg_price}}</div><div class="lbl">平均価格</div></div>
+          </div>
+
+          <div class="subtable-title">取得データ（先頭8行）</div>
+          <div class="table-scroll">{{books_table}}</div>
+
+          <div class="note-box">練習用公開サイト books.toscrape.com を対象。実案件では対象サイトの利用規約・robots.txtを遵守します。</div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="background:var(--white);">
+  <div class="wrap">
+    <span class="eyebrow reveal">PRICING</span>
+    <h2 class="section-title reveal">サービスと料金</h2>
+    <p class="section-lead reveal">まずは小さくお試しいただける価格からご用意しています。内容に応じてお見積りいたします。</p>
+
+    <div class="price-grid">
+      <div class="price-card reveal">
+        <span class="price-badge">初回限定価格</span>
+        <h3>LP制作</h3>
+        <div class="price-value">8,000円<span>〜</span></div>
+        <div class="price-days">納期目安：3日〜</div>
+        <ul>
+          <li>1ページ完結型のランディングページ</li>
+          <li>レスポンシブ対応・フォーム設置</li>
+          <li>OGP設定・簡単な修正込み</li>
+        </ul>
+      </div>
+      <div class="price-card reveal">
+        <span class="price-badge">初回限定価格</span>
+        <h3>Excel自動化</h3>
+        <div class="price-value">5,000円<span>〜</span></div>
+        <div class="price-days">納期目安：2日〜</div>
+        <ul>
+          <li>CSV/Excelの整形・自動クリーニング</li>
+          <li>集計表・グラフ付きレポート出力</li>
+          <li>作業ログの自動記録</li>
+        </ul>
+      </div>
+      <div class="price-card reveal">
+        <span class="price-badge">初回限定価格</span>
+        <h3>スクレイピング</h3>
+        <div class="price-value">6,000円<span>〜</span></div>
+        <div class="price-days">納期目安：3日〜</div>
+        <ul>
+          <li>対象サイトのデータ自動収集</li>
+          <li>CSV / Excel形式で納品</li>
+          <li>レート制限・リトライ処理込み</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="flow">
+  <div class="wrap">
+    <span class="eyebrow reveal">FLOW</span>
+    <h2 class="section-title reveal">進め方</h2>
+    <p class="section-lead reveal">ご相談から納品まで、シンプルな4ステップで進めます。</p>
+    <div class="flow-grid">
+      <div class="flow-card reveal">
+        <div class="flow-num">01</div>
+        <h3>ヒアリング</h3>
+        <p>ご要望・目的・現状の課題をメッセージでお伺いします。</p>
+      </div>
+      <div class="flow-card reveal">
+        <div class="flow-num">02</div>
+        <h3>制作</h3>
+        <p>要件に沿ってLP・自動化ツールを制作します。</p>
+      </div>
+      <div class="flow-card reveal">
+        <div class="flow-num">03</div>
+        <h3>確認・修正</h3>
+        <p>成果物をご確認いただき、必要に応じて調整します。</p>
+      </div>
+      <div class="flow-card reveal">
+        <div class="flow-num">04</div>
+        <h3>納品</h3>
+        <p>ファイル一式・ソースコードを納品して完了です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div>
+      <div class="footer-brand">Web制作<span>×</span>業務自動化</div>
+      <p class="footer-note" style="margin-top:8px;">お問い合わせはココナラ / ランサーズのメッセージからお願いいたします。</p>
+    </div>
+    <div class="footer-ctas">
+      <a class="btn btn-accent" href="#" data-attr="coconala-footer" target="_blank" rel="noopener">ココナラ</a>
+      <a class="btn btn-outline" href="#" data-attr="lancers-footer" target="_blank" rel="noopener">ランサーズ</a>
+    </div>
+  </div>
+  <div class="footer-bottom wrap">© 2026 Web制作・業務自動化ポートフォリオ</div>
+</footer>
+
+<script>
+  (function(){
+    var items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      items.forEach(function(el){ el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    items.forEach(function(el){ io.observe(el); });
+  })();
+</script>
+
+</body>
+</html>

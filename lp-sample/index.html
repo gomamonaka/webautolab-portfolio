@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>珈琲と焼き菓子の店 ハナミズキ | 東京・下町の小さなカフェ</title>
+<meta name="description" content="珈琲と焼き菓子の店 ハナミズキは、東京の路地裏にひっそりと佇む小さなカフェです。丁寧に淹れた一杯の珈琲と、毎朝焼き上げる焼き菓子で、ほっと一息つける時間をお届けします。">
+<meta property="og:title" content="珈琲と焼き菓子の店 ハナミズキ">
+<meta property="og:description" content="東京の路地裏にひっそりと佇む小さなカフェ。丁寧な一杯と、焼きたての焼き菓子。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="珈琲と焼き菓子の店 ハナミズキ">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#faf3e8;
+    --cream-deep:#f2e6d3;
+    --brown:#3e2a20;
+    --brown-soft:#6b4d3a;
+    --terracotta:#c86a4f;
+    --terracotta-deep:#b1543b;
+    --gold:#c9a15a;
+    --white:#fffdf9;
+    --shadow: 0 10px 30px rgba(62,42,32,.12);
+    --radius: 18px;
+    --maxw: 1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Noto Sans JP',"Hiragino Sans","Yu Gothic",sans-serif;
+    background:var(--cream);
+    color:var(--brown);
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  section{position:relative;padding:96px 0;}
+  .eyebrow{
+    display:inline-block;
+    font-size:.78rem;
+    letter-spacing:.28em;
+    color:var(--terracotta-deep);
+    font-weight:700;
+    margin-bottom:14px;
+    text-transform:uppercase;
+  }
+  h2.title{
+    font-size:clamp(1.6rem,4vw,2.4rem);
+    font-weight:900;
+    color:var(--brown);
+    margin-bottom:14px;
+    letter-spacing:.03em;
+  }
+  .lead{color:var(--brown-soft);font-size:1rem;max-width:640px;}
+  .section-head{text-align:center;margin-bottom:56px;}
+  .section-head .lead{margin-left:auto;margin-right:auto;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--terracotta);
+    color:var(--white);
+    font-weight:700;
+    font-size:1rem;
+    padding:16px 36px;
+    border-radius:999px;
+    border:none;
+    cursor:pointer;
+    box-shadow:0 8px 24px rgba(200,106,79,.35);
+    transition:transform .25s ease, box-shadow .25s ease, background .25s ease;
+  }
+  .btn:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(200,106,79,.45);background:var(--terracotta-deep);}
+  .btn:active{transform:translateY(0);}
+  .btn-outline{
+    background:transparent;
+    color:var(--brown);
+    border:1.5px solid var(--brown);
+    box-shadow:none;
+  }
+  .btn-outline:hover{background:var(--brown);color:var(--white);}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;top:0;left:0;right:0;
+    z-index:100;
+    background:rgba(250,243,232,.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(62,42,32,.08);
+    transition:box-shadow .3s ease;
+  }
+  header.scrolled{box-shadow:0 4px 20px rgba(62,42,32,.08);}
+  .nav{
+    max-width:var(--maxw);margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;color:var(--brown);}
+  .logo-mark{
+    width:34px;height:34px;border-radius:50%;
+    background:radial-gradient(circle at 32% 32%, var(--gold), var(--terracotta) 70%);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1rem;color:var(--white);flex-shrink:0;
+  }
+  .nav-links{display:flex;gap:32px;align-items:center;}
+  .nav-links a{font-size:.9rem;font-weight:500;color:var(--brown-soft);position:relative;padding:4px 0;}
+  .nav-links a::after{
+    content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;
+    background:var(--terracotta);transform:scaleX(0);transform-origin:right;
+    transition:transform .3s ease;
+  }
+  .nav-links a:hover{color:var(--brown);}
+  .nav-links a:hover::after{transform:scaleX(1);transform-origin:left;}
+  .nav-cta{font-size:.85rem !important;padding:10px 22px !important;}
+  .nav-toggle{
+    display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;
+  }
+  .nav-toggle span{width:24px;height:2px;background:var(--brown);border-radius:2px;transition:.3s;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:120px 0 100px;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 85% 15%, rgba(200,106,79,.18), transparent 45%),
+      radial-gradient(circle at 8% 85%, rgba(201,161,90,.22), transparent 40%),
+      linear-gradient(180deg, var(--cream) 0%, var(--cream-deep) 100%);
+  }
+  .hero-shape{
+    position:absolute;border-radius:50%;
+    filter:blur(2px);
+    opacity:.55;
+  }
+  .shape-1{width:260px;height:260px;top:-60px;right:-60px;background:radial-gradient(circle at 30% 30%, var(--terracotta), transparent 70%);}
+  .shape-2{width:180px;height:180px;bottom:-40px;left:-40px;background:radial-gradient(circle at 30% 30%, var(--gold), transparent 70%);}
+  .shape-3{width:90px;height:90px;top:30%;left:6%;background:radial-gradient(circle at 30% 30%, var(--brown-soft), transparent 70%);opacity:.15;}
+  .hero-inner{
+    position:relative;z-index:2;
+    display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;
+  }
+  .hero-copy .eyebrow{background:rgba(200,106,79,.12);padding:6px 16px;border-radius:999px;}
+  .hero h1{
+    font-size:clamp(2.1rem,5.2vw,3.4rem);
+    font-weight:900;
+    line-height:1.35;
+    color:var(--brown);
+    margin:18px 0 22px;
+  }
+  .hero h1 .accent{color:var(--terracotta-deep);}
+  .hero p{color:var(--brown-soft);font-size:1.05rem;max-width:480px;margin-bottom:36px;}
+  .hero-actions{display:flex;gap:16px;flex-wrap:wrap;}
+  .hero-visual{
+    position:relative;
+    aspect-ratio:1/1;
+    border-radius:32px;
+    background:
+      linear-gradient(160deg, var(--terracotta) 0%, var(--terracotta-deep) 55%, var(--brown) 130%);
+    box-shadow:var(--shadow);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+  }
+  .hero-visual::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.25), transparent 40%),
+      repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 12px, transparent 12px 24px);
+  }
+  .cup{
+    position:relative;z-index:2;
+    width:58%;aspect-ratio:1/1;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #efe0c8, var(--cream-deep) 60%);
+    box-shadow:inset 0 -10px 24px rgba(62,42,32,.18), 0 20px 40px rgba(0,0,0,.25);
+    display:flex;align-items:center;justify-content:center;
+    font-size:4rem;
+  }
+  .steam{
+    position:absolute;top:8%;left:50%;transform:translateX(-50%);
+    display:flex;gap:10px;z-index:3;
+  }
+  .steam span{
+    display:block;width:6px;height:34px;border-radius:6px;
+    background:rgba(255,255,255,.55);
+    animation:steamRise 2.6s ease-in-out infinite;
+  }
+  .steam span:nth-child(2){animation-delay:.5s;}
+  .steam span:nth-child(3){animation-delay:1s;}
+  @keyframes steamRise{
+    0%{transform:translateY(0) scaleY(1);opacity:0;}
+    30%{opacity:.7;}
+    100%{transform:translateY(-26px) scaleY(1.4);opacity:0;}
+  }
+  .scroll-cue{
+    position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
+    font-size:.72rem;color:var(--brown-soft);letter-spacing:.2em;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .scroll-cue .line{width:1px;height:34px;background:var(--brown-soft);position:relative;overflow:hidden;}
+  .scroll-cue .line::after{
+    content:"";position:absolute;top:-100%;left:0;width:100%;height:100%;
+    background:var(--terracotta);animation:scrollLine 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollLine{0%{top:-100%;}50%{top:0;}100%{top:100%;}}
+
+  /* ---------- fade-in ---------- */
+  .fade-in{opacity:0;transform:translateY(28px);transition:opacity .8s ease, transform .8s ease;}
+  .fade-in.visible{opacity:1;transform:translateY(0);}
+
+  /* ---------- こだわり ---------- */
+  .features{background:var(--white);}
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+  .feature-card{
+    background:var(--cream);
+    border-radius:var(--radius);
+    padding:38px 28px;
+    text-align:center;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .feature-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);}
+  .feature-icon{
+    width:64px;height:64px;margin:0 auto 20px;
+    border-radius:50%;
+    background:linear-gradient(160deg, var(--terracotta), var(--terracotta-deep));
+    display:flex;align-items:center;justify-content:center;
+  }
+  .feature-icon svg{width:30px;height:30px;stroke:var(--white);}
+  .feature-card h3{font-size:1.1rem;font-weight:700;margin-bottom:12px;color:var(--brown);}
+  .feature-card p{font-size:.9rem;color:var(--brown-soft);}
+
+  /* ---------- メニュー ---------- */
+  .menu{
+    background:var(--cream-deep);
+  }
+  .menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+  .menu-item{
+    background:var(--white);
+    border-radius:var(--radius);
+    padding:28px;
+    display:flex;gap:20px;align-items:center;
+    box-shadow:0 4px 16px rgba(62,42,32,.06);
+    transition:transform .3s ease;
+  }
+  .menu-item:hover{transform:translateY(-4px);}
+  .menu-thumb{
+    width:76px;height:76px;border-radius:16px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:2.1rem;
+  }
+  .menu-thumb.c1{background:linear-gradient(160deg,#7a4a2f,#4a2c1c);}
+  .menu-thumb.c2{background:linear-gradient(160deg,#e2b273,#c8895a);}
+  .menu-thumb.c3{background:linear-gradient(160deg,#d98f6f,#b1543b);}
+  .menu-thumb.c4{background:linear-gradient(160deg,#caa15c,#8a6a2e);}
+  .menu-info{flex:1;}
+  .menu-info .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+  .menu-info h3{font-size:1.02rem;font-weight:700;color:var(--brown);}
+  .menu-info .price{font-weight:700;color:var(--terracotta-deep);white-space:nowrap;}
+  .menu-info p{font-size:.85rem;color:var(--brown-soft);margin-top:6px;}
+
+  /* ---------- 店舗情報 ---------- */
+  .store{background:var(--white);}
+  .store-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:stretch;}
+  .store-info dl{display:grid;grid-template-columns:auto 1fr;gap:18px 20px;}
+  .store-info dt{
+    font-weight:700;color:var(--terracotta-deep);font-size:.85rem;
+    padding-top:2px;white-space:nowrap;
+  }
+  .store-info dd{color:var(--brown-soft);font-size:.95rem;}
+  .map-placeholder{
+    border-radius:var(--radius);
+    background:
+      linear-gradient(135deg, var(--cream-deep) 25%, transparent 25%) -20px 0/40px 40px,
+      linear-gradient(225deg, var(--cream-deep) 25%, transparent 25%) -20px 0/40px 40px,
+      linear-gradient(315deg, var(--cream-deep) 25%, transparent 25%) 0 0/40px 40px,
+      linear-gradient(45deg, var(--cream-deep) 25%, var(--cream) 25%) 0 0/40px 40px;
+    min-height:280px;
+    display:flex;align-items:center;justify-content:center;
+    border:2px dashed rgba(62,42,32,.25);
+    color:var(--brown-soft);
+    font-size:.9rem;
+    text-align:center;
+    flex-direction:column;gap:10px;
+  }
+  .map-placeholder .pin{font-size:2rem;}
+
+  /* ---------- お客様の声 ---------- */
+  .voice{background:var(--cream-deep);}
+  .voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  .voice-card{
+    background:var(--white);
+    border-radius:var(--radius);
+    padding:32px;
+    position:relative;
+    box-shadow:0 4px 16px rgba(62,42,32,.06);
+  }
+  .voice-card .quote-mark{
+    font-size:2.6rem;color:var(--terracotta);opacity:.35;
+    line-height:1;font-weight:900;margin-bottom:8px;
+  }
+  .voice-card p{color:var(--brown-soft);font-size:.95rem;margin-bottom:18px;}
+  .voice-who{display:flex;align-items:center;gap:12px;}
+  .voice-avatar{
+    width:42px;height:42px;border-radius:50%;
+    background:linear-gradient(160deg,var(--gold),var(--terracotta));
+    display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:700;font-size:.9rem;
+  }
+  .voice-who .name{font-weight:700;font-size:.88rem;color:var(--brown);}
+  .voice-who .role{font-size:.78rem;color:var(--brown-soft);}
+  .stars{color:var(--gold);font-size:.85rem;letter-spacing:2px;}
+
+  /* ---------- お問い合わせ ---------- */
+  .contact{background:var(--white);}
+  .contact-box{
+    max-width:640px;margin:0 auto;
+    background:var(--cream);
+    border-radius:24px;
+    padding:44px;
+    box-shadow:var(--shadow);
+  }
+  .field{margin-bottom:22px;}
+  .field label{
+    display:block;font-size:.85rem;font-weight:700;margin-bottom:8px;color:var(--brown);
+  }
+  .field input, .field textarea{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1.5px solid rgba(62,42,32,.18);
+    background:var(--white);
+    font-family:inherit;
+    font-size:.95rem;
+    color:var(--brown);
+    transition:border-color .25s ease, box-shadow .25s ease;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none;
+    border-color:var(--terracotta);
+    box-shadow:0 0 0 4px rgba(200,106,79,.14);
+  }
+  .field textarea{resize:vertical;min-height:120px;}
+  .contact-box .btn{width:100%;justify-content:center;font-size:1rem;}
+  .required{color:var(--terracotta-deep);font-size:.75rem;margin-left:4px;}
+
+  /* ---------- Footer ---------- */
+  footer{
+    background:var(--brown);
+    color:var(--cream);
+    padding:56px 0 28px;
+  }
+  .footer-top{
+    display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px;
+    padding-bottom:32px;border-bottom:1px solid rgba(250,243,232,.15);
+  }
+  .footer-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.1rem;}
+  .footer-nav{display:flex;gap:28px;flex-wrap:wrap;}
+  .footer-nav a{font-size:.85rem;color:rgba(250,243,232,.75);}
+  .footer-nav a:hover{color:var(--cream);}
+  .footer-sns{display:flex;gap:14px;}
+  .footer-sns a{
+    width:36px;height:36px;border-radius:50%;
+    border:1px solid rgba(250,243,232,.3);
+    display:flex;align-items:center;justify-content:center;
+    font-size:.95rem;
+  }
+  .footer-bottom{
+    padding-top:24px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    font-size:.78rem;color:rgba(250,243,232,.55);
+  }
+
+  @media (max-width:860px){
+    .hero-inner{grid-template-columns:1fr;}
+    .hero-visual{max-width:340px;margin:0 auto;}
+    .feature-grid{grid-template-columns:1fr;}
+    .menu-grid{grid-template-columns:1fr;}
+    .store-grid{grid-template-columns:1fr;}
+    .voice-grid{grid-template-columns:1fr;}
+    .nav-links{
+      position:fixed;top:0;right:0;height:100vh;width:min(78vw,320px);
+      background:var(--white);
+      flex-direction:column;justify-content:center;align-items:flex-start;
+      padding:40px;gap:26px;
+      box-shadow:-8px 0 30px rgba(0,0,0,.15);
+      transform:translateX(100%);
+      transition:transform .35s ease;
+      z-index:200;
+    }
+    .nav-links.open{transform:translateX(0);}
+    .nav-toggle{display:flex;}
+    .nav-overlay{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:150;
+    }
+    .nav-overlay.open{display:block;}
+    section{padding:72px 0;}
+  }
+  @media (max-width:480px){
+    .contact-box{padding:28px 20px;}
+    .hero{padding:100px 0 72px;}
+  }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <nav class="nav">
+    <a href="#top" class="logo">
+      <span class="logo-mark">🌸</span>
+      ハナミズキ
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="メニューを開く" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#concept" class="nav-link">こだわり</a></li>
+      <li><a href="#menu" class="nav-link">メニュー</a></li>
+      <li><a href="#store" class="nav-link">店舗情報</a></li>
+      <li><a href="#voice" class="nav-link">お客様の声</a></li>
+      <li><a href="#contact" class="btn nav-cta">ご予約・お問い合わせ</a></li>
+    </ul>
+  </nav>
+</header>
+<div class="nav-overlay" id="navOverlay"></div>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-shape shape-1"></div>
+    <div class="hero-shape shape-2"></div>
+    <div class="hero-shape shape-3"></div>
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow">TOKYO / NEIGHBORHOOD CAFE</span>
+        <h1>路地裏でひと息、<br><span class="accent">珈琲</span>と<span class="accent">焼き菓子</span>の時間。</h1>
+        <p>ハナミズキは、忙しい毎日にそっと寄り添う小さなカフェです。厳選豆を一杯ずつ丁寧に淹れ、毎朝焼き上げる焼き菓子とともにお届けします。</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn">ご予約・お問い合わせ</a>
+          <a href="#menu" class="btn btn-outline">メニューを見る</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="steam"><span></span><span></span><span></span></div>
+        <div class="cup">☕</div>
+      </div>
+    </div>
+    <div class="scroll-cue"><span>SCROLL</span><span class="line"></span></div>
+  </section>
+
+  <section class="features" id="concept">
+    <div class="wrap">
+      <div class="section-head fade-in">
+        <span class="eyebrow">CONCEPT</span>
+        <h2 class="title">私たちのこだわり</h2>
+        <p class="lead">素材と時間を惜しまず、心からくつろげる一杯と一皿をお届けします。</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg>
+          </div>
+          <h3>厳選した自家焙煎豆</h3>
+          <p>全国の契約農園から仕入れる豆を、店内で少量ずつ丁寧に焙煎。香り高い一杯をお楽しみいただけます。</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+          </div>
+          <h3>毎朝手作りの焼き菓子</h3>
+          <p>開店前から仕込む焼き菓子は、素材の味を活かしたやさしい甘さ。季節限定フレーバーも登場します。</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          </div>
+          <h3>ほっとくつろげる空間</h3>
+          <p>木のぬくもりを感じる店内は、ひとりの時間にも、大切な人との語らいにも寄り添います。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu" id="menu">
+    <div class="wrap">
+      <div class="section-head fade-in">
+        <span class="eyebrow">MENU</span>
+        <h2 class="title">人気のメニュー</h2>
+        <p class="lead">定番から季節限定まで、心をこめてご用意しています。</p>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-item fade-in">
+          <div class="menu-thumb c1">☕</div>
+          <div class="menu-info">
+            <div class="row"><h3>ハナミズキブレンド</h3><span class="price">¥580</span></div>
+            <p>コクと甘み、香ばしさのバランスがとれた看板ブレンド。</p>
+          </div>
+        </div>
+        <div class="menu-item fade-in">
+          <div class="menu-thumb c2">🥐</div>
+          <div class="menu-info">
+            <div class="row"><h3>発酵バターのクロワッサン</h3><span class="price">¥380</span></div>
+            <p>外はさくり、中はもっちり。毎朝焼きたてをご提供。</p>
+          </div>
+        </div>
+        <div class="menu-item fade-in">
+          <div class="menu-thumb c3">🍰</div>
+          <div class="menu-info">
+            <div class="row"><h3>季節のフルーツタルト</h3><span class="price">¥620</span></div>
+            <p>旬の果物をたっぷり使った、彩り豊かな一皿。</p>
+          </div>
+        </div>
+        <div class="menu-item fade-in">
+          <div class="menu-thumb c4">🍪</div>
+          <div class="menu-info">
+            <div class="row"><h3>アーモンドフィナンシェ</h3><span class="price">¥280</span></div>
+            <p>バターの香り豊かな、手土産にも人気の焼き菓子。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="store" id="store">
+    <div class="wrap store-grid">
+      <div class="store-info fade-in">
+        <span class="eyebrow">ACCESS</span>
+        <h2 class="title">店舗情報</h2>
+        <dl>
+          <dt>店名</dt><dd>珈琲と焼き菓子の店 ハナミズキ</dd>
+          <dt>住所</dt><dd>〒113-0022 東京都文京区千駄木3丁目X-X ハナミズキビル1F</dd>
+          <dt>営業時間</dt><dd>8:00〜19:00(L.O. 18:30)</dd>
+          <dt>定休日</dt><dd>毎週水曜日・年末年始</dd>
+          <dt>電話</dt><dd>03-XXXX-XXXX</dd>
+          <dt>アクセス</dt><dd>千駄木駅 徒歩4分/根津駅 徒歩7分</dd>
+        </dl>
+      </div>
+      <div class="map-placeholder fade-in">
+        <span class="pin">📍</span>
+        <span>地図プレースホルダー<br>(Google Maps 埋め込み予定)</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="voice" id="voice">
+    <div class="wrap">
+      <div class="section-head fade-in">
+        <span class="eyebrow">VOICE</span>
+        <h2 class="title">お客様の声</h2>
+        <p class="lead">ありがたいお声をいただいています。</p>
+      </div>
+      <div class="voice-grid">
+        <div class="voice-card fade-in">
+          <div class="quote-mark">"</div>
+          <div class="stars">★★★★★</div>
+          <p>近所に引っ越してきて偶然見つけましたが、すっかりお気に入りに。ブレンドの香りが最高で、仕事帰りに必ず立ち寄っています。</p>
+          <div class="voice-who">
+            <div class="voice-avatar">S</div>
+            <div><div class="name">S様</div><div class="role">近隣にお住まいの会社員</div></div>
+          </div>
+        </div>
+        <div class="voice-card fade-in">
+          <div class="quote-mark">"</div>
+          <div class="stars">★★★★★</div>
+          <p>フィナンシェを手土産に買って以来、家族みんなの大好物になりました。焼き菓子のやさしい甘さが本当に絶品です。</p>
+          <div class="voice-who">
+            <div class="voice-avatar">K</div>
+            <div><div class="name">K様</div><div class="role">常連のお客様</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <div class="section-head fade-in">
+        <span class="eyebrow">CONTACT</span>
+        <h2 class="title">ご予約・お問い合わせ</h2>
+        <p class="lead">ご質問やご予約はこちらのフォームよりお気軽にお送りください。</p>
+      </div>
+      <form class="contact-box fade-in" id="contactForm" novalidate>
+        <div class="field">
+          <label for="name">お名前<span class="required">必須</span></label>
+          <input type="text" id="name" name="name" placeholder="山田 花子" required>
+        </div>
+        <div class="field">
+          <label for="email">メールアドレス<span class="required">必須</span></label>
+          <input type="email" id="email" name="email" placeholder="example@mail.com" required>
+        </div>
+        <div class="field">
+          <label for="message">お問い合わせ内容<span class="required">必須</span></label>
+          <textarea id="message" name="message" placeholder="ご予約人数やご質問などをご記入ください" required></textarea>
+        </div>
+        <button type="submit" class="btn">送信する</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <a href="#top" class="footer-logo"><span class="logo-mark">🌸</span>ハナミズキ</a>
+      <ul class="footer-nav">
+        <li><a href="#concept">こだわり</a></li>
+        <li><a href="#menu">メニュー</a></li>
+        <li><a href="#store">店舗情報</a></li>
+        <li><a href="#voice">お客様の声</a></li>
+        <li><a href="#contact">お問い合わせ</a></li>
+      </ul>
+      <div class="footer-sns" aria-hidden="true">
+        <a href="#">IG</a><a href="#">X</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>〒113-0022 東京都文京区千駄木3丁目X-X / 8:00〜19:00(水曜定休)</span>
+      <span>&copy; 2026 珈琲と焼き菓子の店 ハナミズキ. All Rights Reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Sticky header shadow
+  var header = document.getElementById("siteHeader");
+  window.addEventListener("scroll", function () {
+    header.classList.toggle("scrolled", window.scrollY > 8);
+  }, { passive: true });
+
+  // Mobile nav toggle
+  var navToggle = document.getElementById("navToggle");
+  var navLinks = document.getElementById("navLinks");
+  var navOverlay = document.getElementById("navOverlay");
+  function closeNav(){
+    navLinks.classList.remove("open");
+    navOverlay.classList.remove("open");
+    navToggle.setAttribute("aria-expanded", "false");
+  }
+  navToggle.addEventListener("click", function () {
+    var isOpen = navLinks.classList.toggle("open");
+    navOverlay.classList.toggle("open", isOpen);
+    navToggle.setAttribute("aria-expanded", String(isOpen));
+  });
+  navOverlay.addEventListener("click", closeNav);
+  document.querySelectorAll(".nav-links a").forEach(function (a) {
+    a.addEventListener("click", closeNav);
+  });
+
+  // Fade-in on scroll
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: "0px 0px -60px 0px" });
+  document.querySelectorAll(".fade-in").forEach(function (el) {
+    observer.observe(el);
+  });
+
+  // Dummy form submit
+  document.getElementById("contactForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = document.getElementById("name").value.trim();
+    if (!this.checkValidity()) {
+      this.reportValidity();
+      return;
+    }
+    alert("ご送信ありがとうございます、" + name + " 様。\n担当者よりあらためてご連絡いたします。\n(これはサンプルのため実際には送信されません)");
+    this.reset();
+  });
+</script>
+
+</body>
+</html>
