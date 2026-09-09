@@ -4,10 +4,10 @@ build_index.py
 
 ポートフォリオトップページ (index.html) を生成するスクリプト。
 
-- excel-tool/output/売上レポート.xlsx から「整形済データ」先頭8行、「月別集計」、
-  「クリーニングログ」を読み込み、HTMLテーブルを組み立てる
+- excel-tool/output/売上レポート.xlsx から「整形済データ」（プレビュー8行+全件）、
+  「月別集計」、「クリーニングログ」、集計サマリー指標を読み込み、HTMLを組み立てる
 - excel-tool/input/売上データ_raw.csv から Before/After 比較用の5行を抜き出す
-- scraper/output/books.csv から先頭8行 + サマリー数値を組み立てる
+- scraper/output/books.csv から先頭8行 + 全件 + サマリー数値を組み立てる
 - index_template.html のプレースホルダに埋め込んで index.html を書き出す
 
 実行方法:
@@ -17,6 +17,7 @@ build_index.py
 import csv
 import html
 import os
+import re
 
 from openpyxl import load_workbook
 
@@ -46,6 +47,25 @@ def table_html(headers, rows, css_class="data-table"):
     return "".join(out)
 
 
+def table_html_cells(headers, rows_html, css_class="data-table"):
+    """rows_html: list of list of *already-safe* HTML strings per cell."""
+    out = [f'<table class="{css_class}"><thead><tr>']
+    for h in headers:
+        out.append(f"<th>{esc(h)}</th>")
+    out.append("</tr></thead><tbody>")
+    for row in rows_html:
+        out.append("<tr>")
+        for cell in row:
+            out.append(f"<td>{cell}</td>")
+        out.append("</tr>")
+    out.append("</tbody></table>")
+    return "".join(out)
+
+
+def fmt_yen(n):
+    return f"{n:,.0f}円"
+
+
 # ---------------------------------------------------------------------------
 # Excel自動化サンプル
 # ---------------------------------------------------------------------------
@@ -53,31 +73,44 @@ def table_html(headers, rows, css_class="data-table"):
 def build_excel_section():
     wb = load_workbook(XLSX_PATH, data_only=True)
 
-    # 整形済データ 先頭8行
+    # 整形済データ：先頭8行（プレビュー） + 全件（詳細表示用）
     ws = wb["整形済データ"]
     headers = [c.value for c in ws[1]]
-    rows = []
-    for r in ws.iter_rows(min_row=2, max_row=9, values_only=True):
+
+    all_clean_rows = []
+    for r in ws.iter_rows(min_row=2, values_only=True):
         if r[0] is None:
             continue
+        all_clean_rows.append(list(r))
+
+    def format_clean_row(r):
         formatted = list(r)
-        # 日付セルを YYYY-MM-DD 文字列に
         if hasattr(formatted[0], "strftime"):
             formatted[0] = formatted[0].strftime("%Y-%m-%d")
-        # 単価・売上を円表記に
         for idx in (4, 5):
             if isinstance(formatted[idx], (int, float)):
                 formatted[idx] = f"{formatted[idx]:,.0f}円"
-        rows.append(formatted)
-    seikei_table = table_html(headers, rows)
+        return formatted
+
+    formatted_clean_rows = [format_clean_row(r) for r in all_clean_rows]
+    seikei_table = table_html(headers, formatted_clean_rows[:8])
+    seikei_table_full = table_html(headers, formatted_clean_rows)
+    seikei_row_count = len(formatted_clean_rows)
 
     # 月別集計
     ws2 = wb["月別集計"]
     headers2 = [c.value for c in ws2[1]]
-    rows2 = []
+    monthly_rows_raw = []
     for r in ws2.iter_rows(min_row=2, values_only=True):
         if r[0] is None:
             continue
+        monthly_rows_raw.append(list(r))
+    total_sales = sum(r[1] for r in monthly_rows_raw if isinstance(r[1], (int, float)))
+    total_orders = sum(r[2] for r in monthly_rows_raw if isinstance(r[2], (int, float)))
+    months_count = len(monthly_rows_raw)
+
+    rows2 = []
+    for r in monthly_rows_raw:
         formatted = list(r)
         if isinstance(formatted[1], (int, float)):
             formatted[1] = f"{formatted[1]:,.0f}円"
@@ -95,6 +128,31 @@ def build_excel_section():
         if header_row_idx is not None and row[0] is not None:
             log_rows.append(row)
     log_table = table_html(["項目", "件数"], log_rows, css_class="data-table log-table")
+
+    # ログから代表的な指標を取得（サブ項目の内訳行は除外）
+    log_lookup = {}
+    for item, cnt in log_rows:
+        if item is None:
+            continue
+        key = str(item).strip()
+        if key.startswith("-"):
+            continue
+        log_lookup[key] = cnt
+
+    def find_metric(substr, default=0):
+        for k, v in log_lookup.items():
+            if substr in k and isinstance(v, (int, float)):
+                return v
+        return default
+
+    raw_row_count = find_metric("生データ行数")
+    final_row_count = find_metric("最終行数", seikei_row_count)
+    blank_removed = find_metric("空白行の除去")
+    dup_removed = find_metric("重複行の除去")
+    date_fixed = find_metric("正規化した件数")
+    name_fixed = find_metric("表記ゆれを統一した件数")
+    price_fixed = find_metric("数値化した件数")
+    removed_total = max(raw_row_count - final_row_count, blank_removed + dup_removed)
 
     # Before / After: raw CSV から実際に5行抜粋 (README記載の代表的な5行と対応する行)
     with open(RAW_CSV_PATH, "r", encoding="utf-8-sig", newline="") as f:
@@ -123,22 +181,7 @@ def build_excel_section():
 
     before_table = table_html(raw_header, before_rows, css_class="data-table before-table")
 
-    # After: 上記と同じ行を整形済データから対応日付で拾う (整形済データ全件を読む)
-    all_clean_rows = []
-    for r in ws.iter_rows(min_row=2, values_only=True):
-        if r[0] is None:
-            continue
-        all_clean_rows.append(list(r))
-
-    after_rows = []
-    before_dates_norm = []
-    for r in before_rows:
-        raw_d = r[0].strip()
-        before_dates_norm.append(raw_d)
-
-    # 素朴なマッチング: 日付文字列の断片(月/日 や 令和年)をキーに、整形済側の日付・顧客名で照合
-    import re
-
+    # After: 上記と同じ行を整形済データから対応日付で拾う
     def guess_iso(raw_d):
         m = re.match(r"^(\d{4})[/\-](\d{1,2})[/\-](\d{1,2})$", raw_d)
         if m:
@@ -155,6 +198,7 @@ def build_excel_section():
             return f"2026-{mo:02d}-{d:02d}"
         return None
 
+    after_rows = []
     for r in before_rows:
         iso = guess_iso(r[0].strip())
         customer = r[1].strip()
@@ -167,22 +211,26 @@ def build_excel_section():
                 match = cr
                 break
         if match:
-            formatted = list(match)
-            if hasattr(formatted[0], "strftime"):
-                formatted[0] = formatted[0].strftime("%Y-%m-%d")
-            for idx in (4, 5):
-                if isinstance(formatted[idx], (int, float)):
-                    formatted[idx] = f"{formatted[idx]:,.0f}円"
-            after_rows.append(formatted)
+            after_rows.append(format_clean_row(match))
 
     after_table = table_html(headers, after_rows, css_class="data-table after-table")
 
     return {
         "seikei_table": seikei_table,
+        "seikei_table_full": seikei_table_full,
         "monthly_table": monthly_table,
         "log_table": log_table,
         "before_table": before_table,
         "after_table": after_table,
+        "excel_raw_count": f"{raw_row_count:,.0f}",
+        "excel_clean_count": f"{final_row_count:,.0f}",
+        "excel_removed_count": f"{removed_total:,.0f}",
+        "excel_date_fixed": f"{date_fixed:,.0f}",
+        "excel_name_fixed": f"{name_fixed:,.0f}",
+        "excel_price_fixed": f"{price_fixed:,.0f}",
+        "excel_total_sales": fmt_yen(total_sales),
+        "excel_total_orders": f"{total_orders:,.0f}",
+        "excel_months_count": f"{months_count:,.0f}",
     }
 
 
@@ -197,23 +245,35 @@ def build_books_section():
     header = all_rows[0]
     data = all_rows[1:]
 
-    display_rows = []
-    for r in data[:8]:
+    def to_cells(r, link_label="詳細 ↗"):
         title, price, rating, avail, url = r
-        display_rows.append([title, f"£{float(price):.2f}", f"{rating}", avail, url])
+        return [
+            esc(title),
+            esc(f"£{float(price):.2f}"),
+            esc(rating),
+            esc(avail),
+            f'<a href="{esc(url)}" target="_blank" rel="noopener">{esc(link_label)}</a>',
+        ]
 
-    books_table = table_html(
-        ["タイトル", "価格(GBP)", "評価(1-5)", "在庫状況", "詳細URL"], display_rows,
-        css_class="data-table books-table",
+    preview_headers = ["タイトル", "価格(GBP)", "評価(1-5)", "在庫状況", "詳細"]
+    books_table = table_html_cells(
+        preview_headers, [to_cells(r) for r in data[:8]], css_class="data-table books-table"
+    )
+    books_table_full = table_html_cells(
+        preview_headers, [to_cells(r) for r in data], css_class="data-table books-table"
     )
 
     total = len(data)
     avg_price = sum(float(r[1]) for r in data) / total if total else 0
+    avg_rating = sum(int(r[2]) for r in data) / total if total else 0
 
     return {
         "books_table": books_table,
+        "books_table_full": books_table_full,
         "books_total": f"{total}件",
+        "books_total_num": f"{total}",
         "books_avg_price": f"£{avg_price:.2f}",
+        "books_avg_rating": f"{avg_rating:.1f}",
     }
 
 
