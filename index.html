@@ -139,6 +139,12 @@
   .hero p.sub{
     color:#c7d2e6;
     font-size:1.02rem;
+    margin-bottom:10px;
+    max-width:560px;
+  }
+  .hero p.note{
+    color:#93a3c2;
+    font-size:.88rem;
     margin-bottom:34px;
     max-width:560px;
   }
@@ -249,6 +255,32 @@
     border-radius:999px;
   }
   .feature-chip::before{content:"✓ ";color:var(--accent-deep);font-weight:700;}
+  .outcome-line{
+    font-weight:700;
+    color:var(--navy);
+    font-size:1rem;
+    line-height:1.7;
+    padding:14px 18px;
+    background:var(--accent-soft);
+    border:1px solid #bfe8e2;
+    border-radius:10px;
+    margin-bottom:20px;
+  }
+  .work-cta-row{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-top:28px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+  }
+  .text-link{
+    font-size:.85rem;
+    font-weight:700;
+    color:var(--accent-deep);
+  }
+  .text-link:hover{text-decoration:underline;}
 
   /* LP thumbnail */
   .lp-preview-wrap{
@@ -390,13 +422,24 @@
     font-weight:700;
     margin-bottom:18px;
   }
-  .price-card ul{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);}
+  .price-card ul.price-features{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);}
   .price-card li{
     font-size:.85rem;
     color:var(--ink-soft);
     padding:4px 0;
   }
   .price-card li::before{content:"・";color:var(--accent-deep);}
+  .price-sub{margin-top:18px;}
+  .price-sub h4{
+    font-size:.78rem;
+    font-weight:700;
+    color:var(--navy);
+    margin-bottom:4px;
+  }
+  .price-sub ul{margin-top:0;}
+  .price-sub li{font-size:.8rem;}
+  .price-sub.quote h4{color:#8a4b3b;}
+  .price-sub.quote li::before{content:"・";color:#8a4b3b;}
 
   /* --- flow --- */
   .flow-grid{
@@ -420,6 +463,49 @@
   }
   .flow-card h3{color:var(--navy);font-size:1.02rem;margin-bottom:8px;}
   .flow-card p{color:var(--ink-soft);font-size:.85rem;}
+
+  /* --- trust --- */
+  .trust-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:20px;
+  }
+  .trust-card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:24px 22px;
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+  }
+  .trust-icon{
+    flex:none;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    background:var(--accent-soft);
+    color:var(--accent-deep);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+  }
+  .trust-card p{color:var(--ink);font-size:.92rem;font-weight:500;line-height:1.6;}
+
+  /* --- about --- */
+  .about-block{
+    max-width:760px;
+    color:var(--ink-soft);
+    font-size:.92rem;
+    line-height:1.9;
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:28px 32px;
+  }
+  .about-block strong{color:var(--navy);}
 
   /* --- footer --- */
   footer{
@@ -478,22 +564,23 @@
       <a href="#pricing">料金</a>
       <a href="#flow">進め方</a>
     </nav>
-    <a class="nav-cta" href="#" data-attr="coconala-nav" target="_blank" rel="noopener">ご相談はこちら</a>
+    <a class="nav-cta" href="https://coconala.com/services/4393441" data-attr="coconala-nav" target="_blank" rel="noopener">ご相談はこちら</a>
   </div>
 </header>
 
 <section class="hero">
   <div class="wrap hero-inner">
-    <h1>小規模ビジネスのための<br><em>Web制作・業務自動化</em></h1>
-    <p class="sub">LPの制作から、日々のExcel・CSV作業の自動化、Webからのデータ収集まで。小さなチームや個人事業の「困った」をコードでまとめて解決します。</p>
+    <h1>面倒なWeb・Excel作業を、<br><em>小さく・分かりやすく</em>自動化します。</h1>
+    <p class="sub">Excel/CSV自動化｜Webデータ収集｜LP制作　5,000円〜</p>
+    <p class="note">ご相談だけでもOK。要件が固まっていなくても対応します。</p>
     <div class="pills">
-      <span class="pill">LP制作</span>
       <span class="pill">Excel・CSVデータ整理 / 自動レポート</span>
-      <span class="pill">Webスクレイピング</span>
+      <span class="pill">Webデータ収集</span>
+      <span class="pill">LP制作</span>
     </div>
     <div class="hero-ctas">
-      <a class="btn btn-accent" href="#" data-attr="coconala-hero" target="_blank" rel="noopener">ココナラで相談する</a>
-      <a class="btn btn-outline" href="#" data-attr="lancers-hero" target="_blank" rel="noopener">ランサーズで相談する</a>
+      <a class="btn btn-accent" href="https://coconala.com/services/4393441" data-attr="coconala-hero" target="_blank" rel="noopener">ココナラで相談する</a>
+      <a class="btn btn-outline" href="https://www.lancers.jp/profile/webautolab" data-attr="lancers-hero" target="_blank" rel="noopener">ランサーズで相談する</a>
     </div>
   </div>
 </section>
@@ -505,35 +592,6 @@
     <p class="section-lead reveal">実際に手を動かして作った3種類のサンプルです。コードやファイルはすべてダウンロード・閲覧できます。</p>
 
     <div class="work-grid">
-
-      <!-- LP制作 -->
-      <article class="work-card reveal">
-        <div class="work-head">
-          <div>
-            <span class="work-tag">LP制作</span>
-            <h3 class="work-title">カフェ向け ランディングページ</h3>
-          </div>
-          <div class="work-actions">
-            <a class="btn-sm btn-navy" href="lp-sample/index.html" target="_blank" rel="noopener">デモを見る ↗</a>
-          </div>
-        </div>
-        <div class="work-body">
-          <div class="lp-preview-wrap">
-            <div class="iframe-thumb">
-              <iframe src="lp-sample/index.html" loading="lazy" title="LP制作サンプルプレビュー"></iframe>
-            </div>
-            <div class="lp-preview-note">
-              <p>架空の「珈琲と焼き菓子の店」を題材にした1ページ完結型LPです。ヒーロー、こだわり紹介、メニュー、アクセス、ご予約フォームまでを一気通貫でデザイン・実装しています。</p>
-              <div class="work-feature-list">
-                <span class="feature-chip">レスポンシブ</span>
-                <span class="feature-chip">フォーム</span>
-                <span class="feature-chip">スクロールアニメーション</span>
-                <span class="feature-chip">OGP対応</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
 
       <!-- Excel自動化 -->
       <article class="work-card reveal">
@@ -549,6 +607,7 @@
           </div>
         </div>
         <div class="work-body">
+          <p class="outcome-line">304行の乱れた売上CSV → ファイルを置いて実行するだけで、整形・月別/商品別集計・グラフ付きレポートを自動生成</p>
           <p>日付表記の統一・全角→半角変換・重複や空行の除去・表記ゆれのある商品名の統一・テキスト単価の数値化までを自動化し、装飾済みのExcelレポート(4シート)を出力します。</p>
           <div class="work-feature-list">
             <span class="feature-chip">日付表記統一</span>
@@ -571,14 +630,19 @@
 
           <div class="subtable-title">クリーニングログ</div>
           <div class="table-scroll"><table class="data-table log-table"><thead><tr><th>項目</th><th>件数</th></tr></thead><tbody><tr><td>読み込んだ生データ行数</td><td>304</td></tr><tr><td>空白行の除去</td><td>10</td></tr><tr><td>完全重複行の除去</td><td>18</td></tr><tr><td>前後空白を除去したセル数</td><td>142</td></tr><tr><td>全角数字→半角数字の変換件数</td><td>83</td></tr><tr><td>日付を正規化した件数</td><td>294</td></tr><tr><td>　- YYYY/M/D, YYYY-MM-DD形式</td><td>135</td></tr><tr><td>　- 令和表記</td><td>78</td></tr><tr><td>　- 年省略 (M/D)形式</td><td>81</td></tr><tr><td>商品名の表記ゆれを統一した件数</td><td>112</td></tr><tr><td>単価テキスト(円・¥・カンマ付き)を数値化した件数</td><td>202</td></tr><tr><td>クリーニング後の最終行数</td><td>276</td></tr></tbody></table></div>
+
+          <div class="work-cta-row">
+            <a class="btn btn-accent btn-sm" href="https://coconala.com/services/4393454" target="_blank" rel="noopener">Excel作業を相談する(ココナラ)</a>
+            <a class="text-link" href="https://www.lancers.jp/profile/webautolab" target="_blank" rel="noopener">ランサーズで相談 →</a>
+          </div>
         </div>
       </article>
 
-      <!-- スクレイピング -->
+      <!-- データ収集(スクレイピング) -->
       <article class="work-card reveal">
         <div class="work-head">
           <div>
-            <span class="work-tag">スクレイピング</span>
+            <span class="work-tag">データ収集</span>
             <h3 class="work-title">書籍サイト データ収集</h3>
           </div>
           <div class="work-actions">
@@ -588,6 +652,7 @@
           </div>
         </div>
         <div class="work-body">
+          <p class="outcome-line">商品名・価格・評価・URLの手作業転記 → 60件を約1分でCSV/Excelに自動出力</p>
           <p>カタログページを巡回し、タイトル・価格・評価・在庫状況・詳細URLを収集。レート制限とリトライ処理を備え、CSV / Excel 両方の形式で出力します。</p>
           <div class="stat-row">
             <div class="stat-box"><div class="num">60件</div><div class="lbl">取得件数</div></div>
@@ -599,6 +664,46 @@
           <div class="table-scroll"><table class="data-table books-table"><thead><tr><th>タイトル</th><th>価格(GBP)</th><th>評価(1-5)</th><th>在庫状況</th><th>詳細URL</th></tr></thead><tbody><tr><td>A Light in the Attic</td><td>£51.77</td><td>3</td><td>In stock</td><td>https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html</td></tr><tr><td>Tipping the Velvet</td><td>£53.74</td><td>1</td><td>In stock</td><td>https://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html</td></tr><tr><td>Soumission</td><td>£50.10</td><td>1</td><td>In stock</td><td>https://books.toscrape.com/catalogue/soumission_998/index.html</td></tr><tr><td>Sharp Objects</td><td>£47.82</td><td>4</td><td>In stock</td><td>https://books.toscrape.com/catalogue/sharp-objects_997/index.html</td></tr><tr><td>Sapiens: A Brief History of Humankind</td><td>£54.23</td><td>5</td><td>In stock</td><td>https://books.toscrape.com/catalogue/sapiens-a-brief-history-of-humankind_996/index.html</td></tr><tr><td>The Requiem Red</td><td>£22.65</td><td>1</td><td>In stock</td><td>https://books.toscrape.com/catalogue/the-requiem-red_995/index.html</td></tr><tr><td>The Dirty Little Secrets of Getting Your Dream Job</td><td>£33.34</td><td>4</td><td>In stock</td><td>https://books.toscrape.com/catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html</td></tr><tr><td>The Coming Woman: A Novel Based on the Life of the Infamous Feminist, Victoria Woodhull</td><td>£17.93</td><td>3</td><td>In stock</td><td>https://books.toscrape.com/catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html</td></tr></tbody></table></div>
 
           <div class="note-box">練習用公開サイト books.toscrape.com を対象。実案件では対象サイトの利用規約・robots.txtを遵守します。</div>
+
+          <div class="work-cta-row">
+            <a class="btn btn-accent btn-sm" href="https://coconala.com/services/4393457" target="_blank" rel="noopener">データ収集を相談する(ココナラ)</a>
+            <a class="text-link" href="https://www.lancers.jp/profile/webautolab" target="_blank" rel="noopener">ランサーズで相談 →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- LP制作 -->
+      <article class="work-card reveal">
+        <div class="work-head">
+          <div>
+            <span class="work-tag">LP制作</span>
+            <h3 class="work-title">カフェ向け ランディングページ</h3>
+          </div>
+          <div class="work-actions">
+            <a class="btn-sm btn-navy" href="lp-sample/index.html" target="_blank" rel="noopener">デモを見る ↗</a>
+          </div>
+        </div>
+        <div class="work-body">
+          <p class="outcome-line">原稿と参考サイトをいただければ、スマホ対応・フォーム付きの1ページLPを3日で</p>
+          <div class="lp-preview-wrap">
+            <div class="iframe-thumb">
+              <iframe src="lp-sample/index.html" loading="lazy" title="LP制作サンプルプレビュー"></iframe>
+            </div>
+            <div class="lp-preview-note">
+              <p>架空の「珈琲と焼き菓子の店」を題材にした1ページ完結型LPです。ヒーロー、こだわり紹介、メニュー、アクセス、ご予約フォームまでを一気通貫でデザイン・実装しています。</p>
+              <div class="work-feature-list">
+                <span class="feature-chip">レスポンシブ</span>
+                <span class="feature-chip">フォーム</span>
+                <span class="feature-chip">スクロールアニメーション</span>
+                <span class="feature-chip">OGP対応</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="work-cta-row">
+            <a class="btn btn-accent btn-sm" href="https://coconala.com/services/4393441" target="_blank" rel="noopener">このようなLPを依頼する(ココナラ)</a>
+            <a class="text-link" href="https://www.lancers.jp/profile/webautolab" target="_blank" rel="noopener">ランサーズで相談 →</a>
+          </div>
         </div>
       </article>
 
@@ -606,7 +711,33 @@
   </div>
 </section>
 
-<section id="pricing" style="background:var(--white);">
+<section id="trust" style="background:var(--white);">
+  <div class="wrap">
+    <span class="eyebrow reveal">TRUST</span>
+    <h2 class="section-title reveal">安心して頼める理由</h2>
+    <p class="section-lead reveal">初めてのご依頼でも安心してお任せいただけるよう、進め方をあらかじめ明確にしています。</p>
+    <div class="trust-grid">
+      <div class="trust-card reveal">
+        <div class="trust-icon">✓</div>
+        <p>着手前に完成イメージを確認</p>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon">✓</div>
+        <p>追加料金は着手前に必ず相談</p>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon">✓</div>
+        <p>ソースコード込みで納品</p>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon">✓</div>
+        <p>納品後7日間の軽微な修正に対応</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
   <div class="wrap">
     <span class="eyebrow reveal">PRICING</span>
     <h2 class="section-title reveal">サービスと料金</h2>
@@ -615,36 +746,88 @@
     <div class="price-grid">
       <div class="price-card reveal">
         <span class="price-badge">初回限定価格</span>
-        <h3>LP制作</h3>
-        <div class="price-value">8,000円<span>〜</span></div>
-        <div class="price-days">納期目安：3日〜</div>
-        <ul>
-          <li>1ページ完結型のランディングページ</li>
-          <li>レスポンシブ対応・フォーム設置</li>
-          <li>OGP設定・簡単な修正込み</li>
-        </ul>
-      </div>
-      <div class="price-card reveal">
-        <span class="price-badge">初回限定価格</span>
         <h3>Excel自動化</h3>
         <div class="price-value">5,000円<span>〜</span></div>
         <div class="price-days">納期目安：2日〜</div>
-        <ul>
+        <ul class="price-features">
           <li>CSV/Excelの整形・自動クリーニング</li>
           <li>集計表・グラフ付きレポート出力</li>
           <li>作業ログの自動記録</li>
         </ul>
+        <div class="price-sub">
+          <h4>この価格でできる例</h4>
+          <ul>
+            <li>元データ1〜3ファイル</li>
+            <li>表記ゆれ・重複・日付の整形</li>
+            <li>集計表とグラフ1〜2種</li>
+            <li>Python実行手順付き</li>
+          </ul>
+        </div>
+        <div class="price-sub quote">
+          <h4>別途お見積りの例</h4>
+          <ul>
+            <li>10ファイル超の統合</li>
+            <li>Excelマクロ(VBA)での実装</li>
+            <li>社内システム連携</li>
+          </ul>
+        </div>
       </div>
       <div class="price-card reveal">
         <span class="price-badge">初回限定価格</span>
-        <h3>スクレイピング</h3>
+        <h3>データ収集(スクレイピング)</h3>
         <div class="price-value">6,000円<span>〜</span></div>
         <div class="price-days">納期目安：3日〜</div>
-        <ul>
+        <ul class="price-features">
           <li>対象サイトのデータ自動収集</li>
           <li>CSV / Excel形式で納品</li>
           <li>レート制限・リトライ処理込み</li>
         </ul>
+        <div class="price-sub">
+          <h4>この価格でできる例</h4>
+          <ul>
+            <li>一般公開の静的ページ</li>
+            <li>1サイト・最大5項目・数百件</li>
+            <li>CSVとExcel納品</li>
+          </ul>
+        </div>
+        <div class="price-sub quote">
+          <h4>別途お見積りの例</h4>
+          <ul>
+            <li>JavaScript描画サイト</li>
+            <li>ログインが必要なページ</li>
+            <li>定期自動実行の構築(+3,000円〜)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="price-card reveal">
+        <span class="price-badge">初回限定価格</span>
+        <h3>LP制作</h3>
+        <div class="price-value">15,000円<span>〜</span></div>
+        <div class="price-days">納期目安：3日〜</div>
+        <ul class="price-features">
+          <li>1ページ完結型のランディングページ</li>
+          <li>レスポンシブ対応・フォーム設置</li>
+          <li>OGP設定・簡単な修正込み</li>
+        </ul>
+        <div class="price-sub">
+          <h4>この価格でできる例</h4>
+          <ul>
+            <li>原稿・画像支給</li>
+            <li>1ページ</li>
+            <li>お問い合わせフォーム1つ</li>
+            <li>修正1回</li>
+          </ul>
+        </div>
+        <div class="price-sub quote">
+          <h4>別途お見積りの例</h4>
+          <ul>
+            <li>ライティング</li>
+            <li>画像制作</li>
+            <li>予約システム</li>
+            <li>複雑なアニメーション</li>
+            <li>WordPress組み込み</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -680,6 +863,16 @@
   </div>
 </section>
 
+<section id="about" style="background:var(--white);">
+  <div class="wrap">
+    <span class="eyebrow reveal">ABOUT</span>
+    <h2 class="section-title reveal">制作者について</h2>
+    <div class="about-block reveal">
+      <p><strong>ウェブオートラボ</strong>／Web制作・業務自動化の個人事業。返信は原則1時間以内(深夜早朝は翌朝)。掲載物はポートフォリオ用に自作したサンプルで、実案件では事前に仕様と納品形式を確認してから着手します。</p>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap footer-inner">
     <div>
@@ -687,8 +880,8 @@
       <p class="footer-note" style="margin-top:8px;">お問い合わせはココナラ / ランサーズのメッセージからお願いいたします。</p>
     </div>
     <div class="footer-ctas">
-      <a class="btn btn-accent" href="#" data-attr="coconala-footer" target="_blank" rel="noopener">ココナラ</a>
-      <a class="btn btn-outline" href="#" data-attr="lancers-footer" target="_blank" rel="noopener">ランサーズ</a>
+      <a class="btn btn-accent" href="https://coconala.com/services/4393441" data-attr="coconala-footer" target="_blank" rel="noopener">ココナラ</a>
+      <a class="btn btn-outline" href="https://www.lancers.jp/profile/webautolab" data-attr="lancers-footer" target="_blank" rel="noopener">ランサーズ</a>
     </div>
   </div>
   <div class="footer-bottom wrap">© 2026 Web制作・業務自動化ポートフォリオ</div>
