@@ -264,7 +264,8 @@ header{
 .service-index .name{font-weight:700;font-size:.98rem;white-space:nowrap;}
 .service-index .res{font-size:.82rem;color:var(--panel-dark-ink-soft);text-align:right;}
 @media(max-width:600px){
-  .service-index li{grid-template-columns:2.2em 1fr;row-gap:6px;}
+  .service-index li{grid-template-columns:2.2em minmax(0,1fr);row-gap:6px;}
+  .service-index .name{white-space:normal;min-width:0;}
   .service-index .res{grid-column:2;text-align:left;}
 }
 .hero-ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:38px;}
