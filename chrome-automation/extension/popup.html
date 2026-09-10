@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>WebAutoLab 1クリック自動化(デモ)</title>
+<style>
+  body {
+    width: 260px;
+    margin: 0;
+    padding: 14px;
+    font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    font-size: 12px;
+    color: #222;
+    background: #fff;
+  }
+  h1 {
+    font-size: 13px;
+    margin: 0 0 4px 0;
+    color: #14213d;
+  }
+  .sub {
+    font-size: 11px;
+    color: #667;
+    margin: 0 0 12px 0;
+  }
+  button.action {
+    display: block;
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    background: #2d6cdf;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+  }
+  button.action:hover { background: #1f57bf; }
+  button.action:disabled { opacity: .45; cursor: not-allowed; }
+  #popupStatus {
+    font-size: 11px;
+    color: #556;
+    min-height: 16px;
+    margin-bottom: 10px;
+  }
+  hr { border: none; border-top: 1px solid #e5e8ec; margin: 10px 0; }
+  .howto {
+    font-size: 11px;
+    color: #445;
+    line-height: 1.6;
+  }
+  .howto ol { margin: 4px 0 0 16px; padding: 0; }
+  .footer {
+    margin-top: 10px;
+    font-size: 10px;
+    color: #99a;
+  }
+</style>
+</head>
+<body>
+  <h1>WebAutoLab 1クリック自動化(デモ)</h1>
+  <p class="sub">demo-crm 専用のポートフォリオデモです</p>
+
+  <div id="popupStatus">対象ページを確認しています...</div>
+
+  <button class="action" id="btnExport" disabled>一覧をCSV保存</button>
+  <button class="action" id="btnImport" disabled>CSVから自動入力を開く</button>
+
+  <hr>
+  <div class="howto">
+    <strong>使い方</strong>
+    <ol>
+      <li>顧客一覧ページで「一覧をCSV保存」→ customers_export.csv がダウンロードされます。</li>
+      <li>新規登録ページで「CSVから自動入力」→ customers_import.csv を選択すると1行目が自動入力されます。</li>
+      <li>ページ右下のツールバーの「次の行」「全件登録」で複数件をまとめて処理できます。</li>
+    </ol>
+  </div>
+
+  <div class="footer">対応ページでのみ動作します（demo-crm）</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

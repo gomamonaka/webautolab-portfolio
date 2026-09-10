@@ -1,0 +1,305 @@
+"""
+scraper_v2.py
+
+books.toscrape.com から書籍情報(title, price, rating, availability, url)を
+取得して CSV に書き出すスクレイパー(修正版)。
+
+v1 からの変更点:
+  - 商品カードのセレクタを実際のDOM構造 (article.product_pod) に合わせて修正
+  - 価格セレクタを "p.price .price_color" -> "p.price_color" に修正
+    (価格は p.price ではなく div.product_price の直下に p.price_color として存在する)
+  - 在庫セレクタを ".stock-badge" -> "p.instock.availability" に修正
+    (.stock-badge というクラスはそもそも存在しない)
+  - 1項目ずつ防御的に取得し、欠損時は警告ログを出して "N/A" を入れる
+    (1冊のパースエラーで全体を落とさない)
+  - タイムアウト・User-Agent・リトライ(指数バックオフ)を追加
+  - ページ間に1秒のディレイを追加(サーバー負荷対策)
+  - --check モードでセレクタが今のページ構造とまだ合っているか自己診断できる
+  - 実行ログを after/run.log に記録
+
+CLI/出力仕様は v1 と同じ:
+  $ python scraper_v2.py [--pages N] [--out PATH] [--check]
+  -> CSV: title, price, rating, availability, url
+"""
+
+import argparse
+import csv
+import logging
+import sys
+import time
+from pathlib import Path
+from urllib.parse import urljoin
+
+import requests
+from bs4 import BeautifulSoup
+
+BASE_URL = "https://books.toscrape.com/"
+INDEX_URL = urljoin(BASE_URL, "index.html")
+USER_AGENT = "RepairCaseBot/1.0 (+portfolio; contact: service.goma.monaka@gmail.com)"
+REQUEST_TIMEOUT = 10  # seconds
+MAX_RETRIES = 3
+BACKOFF_BASE = 1.5  # seconds
+PAGE_DELAY = 1.0  # seconds, be polite to the site between page fetches
+
+RATING_WORDS = {
+    "One": 1,
+    "Two": 2,
+    "Three": 3,
+    "Four": 4,
+    "Five": 5,
+}
+
+LOG_PATH = Path(__file__).resolve().parent / "run.log"
+
+logger = logging.getLogger("scraper_v2")
+
+
+def setup_logging(verbose: bool = False) -> None:
+    # Windows のコンソールは既定でcp932になっており、日本語ログが文字化けすることがあるため
+    # 可能であれば標準出力をUTF-8に強制する。
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except AttributeError:
+        pass
+
+    logger.setLevel(logging.DEBUG)
+    logger.handlers.clear()
+
+    file_handler = logging.FileHandler(LOG_PATH, mode="a", encoding="utf-8")
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(
+        logging.Formatter("%(asctime)s [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S")
+    )
+    logger.addHandler(file_handler)
+
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.DEBUG if verbose else logging.INFO)
+    console_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+    logger.addHandler(console_handler)
+
+
+def fetch(url: str) -> requests.Response:
+    """Fetch a URL with timeout + retry/backoff. Raises on final failure."""
+    headers = {"User-Agent": USER_AGENT}
+    last_exc = None
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            logger.debug("GET %s (attempt %d/%d)", url, attempt, MAX_RETRIES)
+            resp = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT)
+            resp.raise_for_status()
+            # books.toscrape.com は Content-Type に charset を付けてこないため、
+            # requests はデフォルトで ISO-8859-1 と誤判定する (実体はUTF-8)。
+            # そのまま resp.text を使うと "£" が "Â£" のように文字化けするので、
+            # 実際のバイト列から判定した apparent_encoding で上書きする。
+            if resp.encoding is None or resp.encoding.lower() == "iso-8859-1":
+                resp.encoding = resp.apparent_encoding
+            return resp
+        except requests.RequestException as exc:
+            last_exc = exc
+            wait = BACKOFF_BASE ** attempt
+            logger.warning(
+                "リクエスト失敗 (%d/%d): %s -> %.1f秒後にリトライ", attempt, MAX_RETRIES, exc, wait
+            )
+            if attempt < MAX_RETRIES:
+                time.sleep(wait)
+    logger.error("リトライ上限に達したため取得を諦めます: %s", url)
+    raise last_exc
+
+
+def parse_rating(pod) -> str:
+    tag = pod.select_one("p.star-rating")
+    if tag is None:
+        logger.warning("評価(star-rating)が見つかりません。タイトル不明の1件をスキップ扱いにします。")
+        return "N/A"
+    classes = tag.get("class", [])
+    for cls in classes:
+        if cls in RATING_WORDS:
+            return str(RATING_WORDS[cls])
+    logger.warning("評価クラスを認識できませんでした: %s", classes)
+    return "N/A"
+
+
+def parse_book(pod, page_url: str) -> dict:
+    # タイトル
+    title_tag = pod.select_one("h3 a")
+    if title_tag is not None and title_tag.has_attr("title"):
+        title = title_tag["title"]
+    else:
+        logger.warning("タイトルが取得できない商品カードがあります。'N/A' として扱います。")
+        title = "N/A"
+
+    # 価格 (実際のDOMでは p.price ではなく div.product_price 直下の p.price_color)
+    price_tag = pod.select_one("p.price_color")
+    if price_tag is not None:
+        price = price_tag.get_text(strip=True)
+    else:
+        logger.warning("価格(p.price_color)が取得できません: title=%s", title)
+        price = "N/A"
+
+    # 評価
+    rating = parse_rating(pod)
+
+    # 在庫 (実際のDOMでは .stock-badge ではなく p.instock.availability)
+    stock_tag = pod.select_one("p.instock.availability")
+    if stock_tag is not None:
+        availability = stock_tag.get_text(strip=True)
+    else:
+        logger.warning("在庫状況(p.instock.availability)が取得できません: title=%s", title)
+        availability = "N/A"
+
+    # URL (相対パスなので絶対URLに変換)
+    link_tag = pod.select_one("h3 a")
+    if link_tag is not None and link_tag.has_attr("href"):
+        url = urljoin(page_url, link_tag["href"])
+    else:
+        logger.warning("URLが取得できない商品カードがあります: title=%s", title)
+        url = "N/A"
+
+    return {
+        "title": title,
+        "price": price,
+        "rating": rating,
+        "availability": availability,
+        "url": url,
+    }
+
+
+def scrape_page(page_url: str) -> list:
+    resp = fetch(page_url)
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    pods = soup.select("article.product_pod")
+    if not pods:
+        logger.warning("article.product_pod にマッチする商品カードが0件でした: %s", page_url)
+        return []
+
+    logger.info("%s: %d件の商品カードを検出", page_url, len(pods))
+    return [parse_book(pod, page_url) for pod in pods]
+
+
+def next_page_url(current_url: str) -> str | None:
+    resp = fetch(current_url)
+    soup = BeautifulSoup(resp.text, "html.parser")
+    next_link = soup.select_one("li.next a")
+    if next_link is None or not next_link.has_attr("href"):
+        return None
+    return urljoin(current_url, next_link["href"])
+
+
+def scrape(num_pages: int) -> list:
+    all_books = []
+    current_url = INDEX_URL
+    for page_num in range(1, num_pages + 1):
+        logger.info("=== ページ %d/%d を取得: %s ===", page_num, num_pages, current_url)
+        books = scrape_page(current_url)
+        all_books.extend(books)
+
+        if page_num < num_pages:
+            nxt = next_page_url(current_url)
+            if nxt is None:
+                logger.info("次ページのリンクが見つからないため、ここで終了します。")
+                break
+            current_url = nxt
+            time.sleep(PAGE_DELAY)
+
+    return all_books
+
+
+def write_csv(books: list, out_path: Path) -> None:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = ["title", "price", "rating", "availability", "url"]
+    with open(out_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(books)
+    logger.info("CSVを書き出しました: %s (%d件)", out_path, len(books))
+
+
+# --- セルフチェックモード -----------------------------------------------
+
+CHECK_SELECTORS = {
+    "商品カード": "article.product_pod",
+    "タイトル": "h3 a",
+    "価格": "p.price_color",
+    "評価": "p.star-rating",
+    "在庫状況": "p.instock.availability",
+    "次ページリンク": "li.next a",
+}
+
+
+def run_check() -> bool:
+    """現在のページ構造が想定通りかを確認し、結果を表示する。
+
+    クライアント側で「動かなくなったかも」と気づくための簡易ヘルスチェック。
+    今後は cron 等でこれを定期実行し、失敗時に通知する運用を推奨。
+    """
+    print(f"[--check] {INDEX_URL} のページ構造を検証します...")
+    logger.info("--check モードを開始: %s", INDEX_URL)
+
+    try:
+        resp = fetch(INDEX_URL)
+    except requests.RequestException as exc:
+        print(f"NG: ページ取得に失敗しました -> {exc}")
+        logger.error("--check: ページ取得に失敗: %s", exc)
+        return False
+
+    soup = BeautifulSoup(resp.text, "html.parser")
+    all_ok = True
+
+    for label, selector in CHECK_SELECTORS.items():
+        matches = soup.select(selector)
+        count = len(matches)
+        ok = count > 0
+        all_ok = all_ok and ok
+        status = "OK" if ok else "NG"
+        print(f"  [{status}] {label:<10s} selector={selector!r:<30s} matched={count}")
+        logger.info("--check: %s selector=%s matched=%d ok=%s", label, selector, count, ok)
+
+    if all_ok:
+        print("=> すべてのセレクタが正常にマッチしました。ページ構造は健全です。")
+        logger.info("--check: 全項目OK")
+    else:
+        print("=> 一部のセレクタがマッチしませんでした。サイト構造が変更された可能性があります。")
+        logger.warning("--check: 一部項目NG")
+
+    return all_ok
+
+
+def main():
+    parser = argparse.ArgumentParser(description="books.toscrape.com scraper (v2, repaired)")
+    parser.add_argument("--pages", type=int, default=1, help="取得するページ数 (default: 1)")
+    parser.add_argument(
+        "--out", type=str, default="output/books.csv", help="出力CSVパス (default: output/books.csv)"
+    )
+    parser.add_argument(
+        "--check", action="store_true", help="ページ構造の自己診断モード(スクレイピングは行わない)"
+    )
+    parser.add_argument("--verbose", action="store_true", help="詳細ログをコンソールにも表示")
+    args = parser.parse_args()
+
+    setup_logging(verbose=args.verbose)
+
+    if args.check:
+        ok = run_check()
+        sys.exit(0 if ok else 2)
+
+    logger.info("=== scraper_v2 開始: pages=%d out=%s ===", args.pages, args.out)
+    start = time.time()
+
+    try:
+        books = scrape(args.pages)
+    except requests.RequestException as exc:
+        logger.error("致命的なエラーでスクレイピングを中断しました: %s", exc)
+        print(f"エラー: サイトへの接続に失敗しました -> {exc}", file=sys.stderr)
+        sys.exit(1)
+
+    out_path = Path(args.out)
+    write_csv(books, out_path)
+
+    elapsed = time.time() - start
+    logger.info("=== scraper_v2 終了: %d件 / %.2f秒 ===", len(books), elapsed)
+    print(f"完了: {len(books)}件を {out_path} に書き出しました ({elapsed:.2f}秒)")
+
+
+if __name__ == "__main__":
+    main()

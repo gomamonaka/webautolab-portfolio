@@ -1,0 +1,7 @@
+sheets: ['分類結果', '集計', '実行ログ']
+total data rows: 100
+categories: Counter({'配送遅延': 15, '使い方の質問': 13, '返品・交換': 12, '不良品': 11, '感謝・好意的な感想': 10, '請求・領収書': 8, '予約変更': 8, '営業・売り込み': 8, 'その他': 6, '採用問い合わせ': 5, 'クレーム': 4})
+urgency: Counter({'中': 43, '低': 29, '高': 28})
+reply_needed: Counter({'要': 92, '不要': 8})
+invalid category count: 0
+rows with any empty new-col: 8

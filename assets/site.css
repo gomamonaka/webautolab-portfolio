@@ -382,7 +382,7 @@ details.expand .table-scroll{border:0;border-top:1px solid var(--line);border-ra
 /* ==========================================================================
    case 1: LP — browser showcase
    ========================================================================== */
-.case-lp .case-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:8px;}
+.case-lp .case-layout,.case-chrome .case-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:8px;}
 .browser-frame{
   border:1px solid var(--line-strong);border-radius:var(--radius);overflow:hidden;
   background:var(--paper-raised);box-shadow:var(--shadow-2);
@@ -400,9 +400,45 @@ details.expand .table-scroll{border:0;border-top:1px solid var(--line);border-ra
 }
 .browser-viewport{width:100%;height:460px;overflow:hidden;background:var(--paper);position:relative;}
 .browser-viewport iframe{width:200%;height:200%;border:0;transform:scale(.5);transform-origin:top left;}
+.browser-viewport.is-image{height:auto;}
+.browser-viewport.is-image img{width:100%;display:block;}
 @media(max-width:960px){
-  .case-lp .case-layout{grid-template-columns:1fr;}
+  .case-lp .case-layout,.case-chrome .case-layout{grid-template-columns:1fr;}
   .browser-viewport{height:360px;}
+  .browser-viewport.is-image{height:auto;}
+}
+
+/* ==========================================================================
+   case shot — static screenshot frame (no live iframe demo)
+   ========================================================================== */
+.case-shot{
+  border:1px solid var(--line-strong);border-radius:var(--radius);overflow:hidden;
+  background:var(--paper-raised);box-shadow:var(--shadow-2);margin:26px 0 6px;
+}
+.case-shot img{width:100%;display:block;}
+.case-shot-cap{
+  padding:10px 14px;font-size:.74rem;color:var(--ink-soft);
+  border-top:1px solid var(--line);background:var(--paper);
+}
+
+/* ==========================================================================
+   repair case — before/after log excerpt panels
+   ========================================================================== */
+.log-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:22px 0 6px;}
+.log-panel{border:1px solid var(--line-strong);border-radius:var(--radius);overflow:hidden;background:var(--panel-dark);}
+.log-panel-head{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border-bottom:1px solid var(--panel-dark-line);
+  font-family:var(--f-mono);font-size:.7rem;letter-spacing:.05em;
+  color:var(--panel-dark-ink-soft);
+}
+.log-panel.is-after .log-panel-head{color:#9fc98c;}
+.log-panel pre{
+  margin:0;padding:14px 16px;font-family:var(--f-mono);font-size:.74rem;line-height:1.7;
+  color:var(--panel-dark-ink);white-space:pre-wrap;word-break:break-word;overflow-x:auto;
+}
+@media(max-width:760px){
+  .log-grid{grid-template-columns:1fr;}
 }
 
 /* ==========================================================================
@@ -467,6 +503,24 @@ details.expand .table-scroll{border:0;border-top:1px solid var(--line);border-ra
 }
 
 /* ==========================================================================
+   works — その他の制作サンプル (compact list)
+   ========================================================================== */
+.mini-case-head{margin-top:88px;padding-top:40px;border-top:1px solid var(--line);}
+.mini-case-head h3{font-size:1.15rem;margin-top:8px;}
+.mini-case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:24px;border-top:1px solid var(--line);}
+.mini-case{padding:22px 22px 22px 0;}
+.mini-case + .mini-case{padding-left:22px;border-left:1px solid var(--line);}
+.mini-case .mc-tag{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);}
+.mini-case h4{font-size:1rem;margin-top:8px;}
+.mini-case p{font-size:.82rem;color:var(--ink-soft);margin-top:6px;line-height:1.7;}
+.mini-case .case-actions{margin-top:14px;padding-top:0;border-top:0;gap:10px;}
+@media(max-width:760px){
+  .mini-case-grid{grid-template-columns:1fr;}
+  .mini-case{padding:20px 0;border-bottom:1px solid var(--line);}
+  .mini-case + .mini-case{padding-left:0;border-left:0;}
+}
+
+/* ==========================================================================
    trust
    ========================================================================== */
 .trust-list{border-top:1px solid var(--line);}
@@ -507,6 +561,7 @@ table.spec-table td.quote ul li{color:var(--ink-faint);}
    flow (process) — connected timeline
    ========================================================================== */
 .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin-top:8px;}
+.timeline.cols-5{grid-template-columns:repeat(5,1fr);}
 .timeline::before{
   content:"";position:absolute;top:14px;left:0;right:0;height:1px;background:var(--line-strong);
 }
@@ -520,7 +575,7 @@ table.spec-table td.quote ul li{color:var(--ink-faint);}
 .tl-step h3{font-size:1rem;margin-bottom:8px;}
 .tl-step p{font-size:.85rem;color:var(--ink-soft);line-height:1.75;padding-right:8px;}
 @media(max-width:840px){
-  .timeline{grid-template-columns:1fr;gap:28px;}
+  .timeline,.timeline.cols-5{grid-template-columns:1fr;gap:28px;}
   .timeline::before{display:none;}
   .tl-step{padding-left:20px;border-left:1px solid var(--line-strong);}
   .tl-step .tl-dot{margin-left:-14.5px;}

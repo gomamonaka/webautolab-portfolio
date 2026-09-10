@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>顧客一覧 | クモゲート顧客管理システム(デモ)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">クモゲート顧客管理システム</div>
+    <div class="user">ログイン中: 営業部 / 一般ユーザー &nbsp;|&nbsp; デモ環境</div>
+  </header>
+
+  <div class="app-body">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="index.html" class="active">顧客一覧</a></li>
+        <li><a href="new.html">新規登録</a></li>
+        <li><a href="#" onclick="return false;">案件管理</a></li>
+        <li><a href="#" onclick="return false;">請求書</a></li>
+        <li><a href="#" onclick="return false;">設定</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <h1 class="page-title">顧客一覧</h1>
+      <p class="page-desc">登録済みの顧客情報を確認できます。（このページはポートフォリオ用のダミーデータです）</p>
+
+      <div class="toolbar">
+        <span class="count" id="rowCount"></span>
+        <a class="btn" href="new.html">＋ 新規登録</a>
+      </div>
+
+      <table class="data-table" id="customerTable">
+        <thead>
+          <tr>
+            <th>会社名</th>
+            <th>担当者</th>
+            <th>電話</th>
+            <th>メール</th>
+            <th>ステータス</th>
+            <th>最終更新</th>
+          </tr>
+        </thead>
+        <tbody id="customerTableBody">
+          <!-- JS で描画 -->
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="data/customers.js"></script>
+  <script>
+    var STATUS_CLASS = {
+      "契約済み": "contract",
+      "商談中": "negotiating",
+      "見込み客": "lead",
+      "休眠": "dormant"
+    };
+
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function renderTable() {
+      var seed = window.DemoCRM.CUSTOMERS_SEED;
+      var extra = window.DemoCRM.getExtraCustomers();
+      var tbody = document.getElementById("customerTableBody");
+      var rowsHtml = "";
+
+      function rowHtml(c, isLocal) {
+        var badgeClass = STATUS_CLASS[c.status] || "lead";
+        return (
+          '<tr class="' + (isLocal ? "local-added" : "") + '" ' +
+          'data-company="' + esc(c.company) + '" ' +
+          'data-person="' + esc(c.person) + '" ' +
+          'data-phone="' + esc(c.phone) + '" ' +
+          'data-email="' + esc(c.email) + '" ' +
+          'data-status="' + esc(c.status) + '" ' +
+          'data-updated="' + esc(c.updated) + '">' +
+          '<td class="col-company">' + esc(c.company) + "</td>" +
+          '<td class="col-person">' + esc(c.person) + "</td>" +
+          '<td class="col-phone">' + esc(c.phone) + "</td>" +
+          '<td class="col-email">' + esc(c.email) + "</td>" +
+          '<td class="col-status"><span class="badge ' + badgeClass + '">' + esc(c.status) + "</span></td>" +
+          '<td class="col-updated">' + esc(c.updated) + "</td>" +
+          "</tr>"
+        );
+      }
+
+      seed.forEach(function (c) { rowsHtml += rowHtml(c, false); });
+      extra.forEach(function (c) { rowsHtml += rowHtml(c, true); });
+
+      tbody.innerHTML = rowsHtml;
+      document.getElementById("rowCount").textContent =
+        "全 " + (seed.length + extra.length) + " 件" + (extra.length ? "（うち新規登録 " + extra.length + " 件）" : "");
+    }
+
+    function showToastIfNeeded() {
+      try {
+        var msg = sessionStorage.getItem("webautolab_toast");
+        if (msg) {
+          sessionStorage.removeItem("webautolab_toast");
+          var toast = document.getElementById("toast");
+          toast.textContent = msg;
+          toast.classList.add("show");
+          setTimeout(function () { toast.classList.remove("show"); }, 2500);
+        }
+      } catch (e) { /* noop */ }
+    }
+
+    renderTable();
+    showToastIfNeeded();
+  </script>
+</body>
+</html>

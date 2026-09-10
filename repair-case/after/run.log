@@ -1,0 +1,19 @@
+2026-09-10 07:19:04 [INFO] --check モードを開始: https://books.toscrape.com/index.html
+2026-09-10 07:19:04 [DEBUG] GET https://books.toscrape.com/index.html (attempt 1/3)
+2026-09-10 07:19:05 [INFO] --check: 商品カード selector=article.product_pod matched=20 ok=True
+2026-09-10 07:19:05 [INFO] --check: タイトル selector=h3 a matched=20 ok=True
+2026-09-10 07:19:05 [INFO] --check: 価格 selector=p.price_color matched=20 ok=True
+2026-09-10 07:19:05 [INFO] --check: 評価 selector=p.star-rating matched=20 ok=True
+2026-09-10 07:19:05 [INFO] --check: 在庫状況 selector=p.instock.availability matched=20 ok=True
+2026-09-10 07:19:05 [INFO] --check: 次ページリンク selector=li.next a matched=1 ok=True
+2026-09-10 07:19:05 [INFO] --check: 全項目OK
+2026-09-10 07:19:06 [INFO] === scraper_v2 開始: pages=2 out=output/books.csv ===
+2026-09-10 07:19:06 [INFO] === ページ 1/2 を取得: https://books.toscrape.com/index.html ===
+2026-09-10 07:19:06 [DEBUG] GET https://books.toscrape.com/index.html (attempt 1/3)
+2026-09-10 07:19:07 [INFO] https://books.toscrape.com/index.html: 20件の商品カードを検出
+2026-09-10 07:19:07 [DEBUG] GET https://books.toscrape.com/index.html (attempt 1/3)
+2026-09-10 07:19:09 [INFO] === ページ 2/2 を取得: https://books.toscrape.com/catalogue/page-2.html ===
+2026-09-10 07:19:09 [DEBUG] GET https://books.toscrape.com/catalogue/page-2.html (attempt 1/3)
+2026-09-10 07:19:11 [INFO] https://books.toscrape.com/catalogue/page-2.html: 20件の商品カードを検出
+2026-09-10 07:19:11 [INFO] CSVを書き出しました: output\books.csv (40件)
+2026-09-10 07:19:11 [INFO] === scraper_v2 終了: 40件 / 4.53秒 ===

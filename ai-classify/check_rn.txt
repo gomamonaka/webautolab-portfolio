@@ -1,0 +1,8 @@
+row14: reply_needed='不要' urgency='低'
+row16: reply_needed='不要' urgency='低'
+row20: reply_needed='不要' urgency='低'
+row38: reply_needed='不要' urgency='低'
+row42: reply_needed='不要' urgency='低'
+row47: reply_needed='不要' urgency='低'
+row52: reply_needed='不要' urgency='低'
+row60: reply_needed='不要' urgency='低'

@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "WebAutoLab 1クリック自動化(デモ)",
+  "version": "1.0.0",
+  "description": "ダミー顧客管理システム(demo-crm)向けの定型作業自動化デモ拡張機能。一覧のCSV保存と、CSVからの新規登録フォーム自動入力ができます。",
+  "default_locale": "ja",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "WebAutoLab 1クリック自動化(デモ)",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost:8765/chrome-automation/demo-crm/*",
+        "https://gomamonaka.github.io/webautolab-portfolio/chrome-automation/demo-crm/*"
+      ],
+      "js": ["lib/csv.js", "content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

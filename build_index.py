@@ -4,20 +4,30 @@ build_index.py
 
 ポートフォリオトップページ (index.html) を生成するスクリプト。
 
+- ai-classify/output/result.xlsx（分類結果・集計シート）+ result_preview.csv から
+  AI分類→Excel化 ケースの Before/After 表・メトリクス・カテゴリ別集計を組み立てる
+- chrome-automation/ 配下の静的デモ（デモCRM + 拡張機能）のリンク・件数を組み立てる
+- repair-case/before, after のログから復旧ケースのターミナル抜粋・件数を組み立てる
 - excel-tool/output/売上レポート.xlsx から「整形済データ」（プレビュー8行+全件）、
   「月別集計」、「クリーニングログ」、集計サマリー指標を読み込み、HTMLを組み立てる
+  （その他の制作サンプルとして縮小掲載）
 - excel-tool/input/売上データ_raw.csv から Before/After 比較用の5行を抜き出す
 - scraper/output/books.csv から先頭8行 + 全件 + サマリー数値を組み立てる
 - index_template.html のプレースホルダに埋め込んで index.html を書き出す
 
 実行方法:
     python build_index.py
+
+注意: ai-classify/output/result.xlsx は運用のなかで随時再生成される想定のため、
+シート名・件数・カテゴリ数はすべてビルド時点のファイル内容から動的に読み取る
+（件数・カテゴリ数をハードコードしない）。
 """
 
 import csv
 import html
 import os
 import re
+import zipfile
 
 from openpyxl import load_workbook
 
@@ -27,6 +37,19 @@ RAW_CSV_PATH = os.path.join(ROOT, "excel-tool", "input", "売上データ_raw.cs
 BOOKS_CSV_PATH = os.path.join(ROOT, "scraper", "output", "books.csv")
 TEMPLATE_PATH = os.path.join(ROOT, "index_template.html")
 OUTPUT_PATH = os.path.join(ROOT, "index.html")
+
+AI_ROOT = os.path.join(ROOT, "ai-classify")
+AI_XLSX_PATH = os.path.join(AI_ROOT, "output", "result.xlsx")
+AI_PREVIEW_CSV_PATH = os.path.join(AI_ROOT, "output", "result_preview.csv")
+
+REPAIR_ROOT = os.path.join(ROOT, "repair-case")
+REPAIR_ERROR_LOG = os.path.join(REPAIR_ROOT, "before", "error.log")
+REPAIR_RUN_LOG = os.path.join(REPAIR_ROOT, "after", "run.log")
+REPAIR_AFTER_CSV = os.path.join(REPAIR_ROOT, "after", "output", "books.csv")
+
+CHROME_ROOT = os.path.join(ROOT, "chrome-automation")
+CHROME_EXTENSION_DIR = os.path.join(CHROME_ROOT, "extension")
+CHROME_ZIP_PATH = os.path.join(CHROME_ROOT, "webautolab-extension-demo.zip")
 
 
 def esc(v) -> str:
@@ -64,6 +87,160 @@ def table_html_cells(headers, rows_html, css_class="data-table"):
 
 def fmt_yen(n):
     return f"{n:,.0f}円"
+
+
+def truncate(s, n):
+    """文字列を n 文字で切り詰め、省略した場合は末尾に … を付ける。"""
+    s = "" if s is None else str(s)
+    return s if len(s) <= n else s[:n] + "…"
+
+
+def sanitize_local_path(line):
+    """ログ中の絶対パス（開発機のユーザー名・作業ディレクトリ）を
+    公開用に ".../before/xxx.py" のような相対表記へ短縮する。"""
+    return re.sub(
+        r'"[^"\n]*[\\/](before|after)[\\/]([^"\n\\/]+)"',
+        lambda m: f'".../{m.group(1)}/{m.group(2)}"',
+        line,
+    )
+
+
+# ---------------------------------------------------------------------------
+# ケース1: AI分類→Excel化
+# ---------------------------------------------------------------------------
+
+def build_ai_classify_section():
+    with open(AI_PREVIEW_CSV_PATH, "r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.reader(f)
+        rows = list(reader)
+    header = rows[0]  # 日時,顧客名(架空),問い合わせ本文,カテゴリ,要約,緊急度,返信要否,返信案
+    data = [r for r in rows[1:] if any((c or "").strip() for c in r)]
+    preview = data[:8]
+
+    idx_text = header.index("問い合わせ本文") if "問い合わせ本文" in header else 2
+    idx_reply = header.index("返信案") if "返信案" in header else 7
+
+    before_headers = header[:3]
+    before_rows = []
+    for r in preview:
+        row = list(r[:3])
+        if len(row) > idx_text:
+            row[idx_text] = truncate(row[idx_text], 40)
+        before_rows.append(row)
+    before_table = table_html(before_headers, before_rows, css_class="data-table before-table")
+
+    after_rows = []
+    for r in preview:
+        row = list(r)
+        if len(row) > idx_text:
+            row[idx_text] = truncate(row[idx_text], 40)
+        if len(row) > idx_reply:
+            row[idx_reply] = truncate(row[idx_reply], 40)
+        after_rows.append(row)
+    after_table = table_html(header, after_rows, css_class="data-table after-table")
+
+    # result.xlsx: 分類結果（総件数）+ 集計（カテゴリ別件数・カテゴリ数）+ シート数
+    # ※ result.xlsx はビルド時点の内容を都度読み込む（件数・カテゴリ数はハードコードしない）
+    total_count = len(data)
+    category_count = 0
+    sheet_count = 0
+    aggregate_table = ""
+    try:
+        wb = load_workbook(AI_XLSX_PATH, data_only=True)
+        sheet_count = len(wb.sheetnames)
+
+        result_sheet = next((n for n in wb.sheetnames if "分類結果" in n), wb.sheetnames[0])
+        ws = wb[result_sheet]
+        total_count = sum(1 for r in ws.iter_rows(min_row=2, values_only=True) if r[0] is not None)
+
+        agg_sheet_name = next((n for n in wb.sheetnames if "集計" in n), None)
+        if agg_sheet_name:
+            ws2 = wb[agg_sheet_name]
+            cat_rows = []
+            in_category_block = False
+            for row in ws2.iter_rows(values_only=True):
+                a, b = (row[0], row[1]) if len(row) >= 2 else (row[0], None)
+                if a == "カテゴリ" and b == "件数":
+                    in_category_block = True
+                    continue
+                if in_category_block:
+                    if a is None:
+                        break
+                    cat_rows.append((a, b))
+            category_count = len(cat_rows)
+            if cat_rows:
+                aggregate_table = table_html(["カテゴリ", "件数"], cat_rows, css_class="data-table mini-table")
+    except (FileNotFoundError, KeyError, StopIteration):
+        # result.xlsx が再生成中で読めない場合は、プレビューCSVの範囲で控えめな値にフォールバック
+        category_count = len({r[3] for r in data if len(r) > 3 and r[3]}) or category_count
+        sheet_count = sheet_count or 3
+
+    return {
+        "ai_before_table": before_table,
+        "ai_after_table": after_table,
+        "ai_aggregate_table": aggregate_table or "<p class=\"note-box\">集計データは再生成中です。</p>",
+        "ai_total_count": f"{total_count:,.0f}",
+        "ai_category_count": f"{category_count:,.0f}",
+        "ai_sheet_count": f"{sheet_count:,.0f}",
+    }
+
+
+# ---------------------------------------------------------------------------
+# ケース2: Chromeの定型作業を1クリック自動化
+# ---------------------------------------------------------------------------
+
+def build_chrome_section():
+    # 配布用ZIPは extension/ フォルダの最新内容から都度作り直す
+    if os.path.isdir(CHROME_EXTENSION_DIR):
+        with zipfile.ZipFile(CHROME_ZIP_PATH, "w", zipfile.ZIP_DEFLATED) as zf:
+            for dirpath, _dirnames, filenames in os.walk(CHROME_EXTENSION_DIR):
+                for fn in filenames:
+                    full = os.path.join(dirpath, fn)
+                    rel = os.path.relpath(full, CHROME_EXTENSION_DIR)
+                    zf.write(full, rel)
+
+    customers_count = 30
+    customers_js = os.path.join(CHROME_ROOT, "demo-crm", "data", "customers.js")
+    try:
+        with open(customers_js, "r", encoding="utf-8") as f:
+            js_src = f.read()
+        customers_count = len(re.findall(r"\{\s*company\s*:", js_src)) or customers_count
+    except FileNotFoundError:
+        pass
+
+    return {"chrome_customers_count": f"{customers_count}"}
+
+
+# ---------------------------------------------------------------------------
+# ケース3: 動かないツールの復旧
+# ---------------------------------------------------------------------------
+
+def build_repair_section():
+    def read_lines(path):
+        with open(path, "r", encoding="utf-8", errors="replace") as f:
+            return [ln.rstrip("\n") for ln in f.readlines()]
+
+    before_lines = read_lines(REPAIR_ERROR_LOG)[:6]
+    after_lines = read_lines(REPAIR_RUN_LOG)[-6:]
+    before_lines = [sanitize_local_path(ln) for ln in before_lines]
+
+    before_html = "\n".join(esc(ln) for ln in before_lines)
+    after_html = "\n".join(esc(ln) for ln in after_lines)
+
+    recovered_count = 40
+    try:
+        with open(REPAIR_AFTER_CSV, "r", encoding="utf-8-sig", newline="") as f:
+            reader = csv.reader(f)
+            rows = list(reader)
+        recovered_count = max(len(rows) - 1, 0)
+    except FileNotFoundError:
+        pass
+
+    return {
+        "repair_before_log": before_html,
+        "repair_after_log": after_html,
+        "repair_count": f"{recovered_count}",
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -282,6 +459,9 @@ def main():
         template = f.read()
 
     ctx = {}
+    ctx.update(build_ai_classify_section())
+    ctx.update(build_chrome_section())
+    ctx.update(build_repair_section())
     ctx.update(build_excel_section())
     ctx.update(build_books_section())
 

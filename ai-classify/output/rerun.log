@@ -1,0 +1,5 @@
+Loaded 100 rows from input/inquiries.csv
+Provider: claude-cli, Model: claude-sonnet-5, dry-run: False
+Wrote output/result.xlsx
+Wrote output/result_preview.csv
+Done. rows=100 batches=5 api_calls=5 elapsed=582.5s cost=$1.0359

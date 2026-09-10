@@ -1,0 +1,19 @@
+$ python scraper_v1.py
+実行日時: 2026-09-10 (JST) / 対象: https://books.toscrape.com/
+Scraping https://books.toscrape.com/ ...
+Traceback (most recent call last):
+  File "C:\Users\gomam\AppData\Roaming\Claude\scratch-workspaces\3769fddd-2b23-4b74-87f9-dcac6df69d53\3556279e-016a-489e-9e87-d6e9252a22ec\scratch-2026-09-09-1b380f\portfolio\repair-case\before\scraper_v1.py", line 50, in <module>
+    main()
+  File "C:\Users\gomam\AppData\Roaming\Claude\scratch-workspaces\3769fddd-2b23-4b74-87f9-dcac6df69d53\3556279e-016a-489e-9e87-d6e9252a22ec\scratch-2026-09-09-1b380f\portfolio\repair-case\before\scraper_v1.py", line 38, in main
+    books = scrape_page(BASE_URL)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\gomam\AppData\Roaming\Claude\scratch-workspaces\3769fddd-2b23-4b74-87f9-dcac6df69d53\3556279e-016a-489e-9e87-d6e9252a22ec\scratch-2026-09-09-1b380f\portfolio\repair-case\before\scraper_v1.py", line 26, in scrape_page
+    price = pod.select_one("p.price .price_color").text
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'text'
+
+$ echo $?
+1
+
+$ ls
+(books.csv は生成されていない)

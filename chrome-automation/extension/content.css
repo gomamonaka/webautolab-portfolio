@@ -1,0 +1,80 @@
+/* WebAutoLab フローティングツールバー */
+#wal-toolbar {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2147483647;
+  background: #14213d;
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .35);
+  padding: 10px;
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: 12px;
+  width: 230px;
+  user-select: none;
+}
+#wal-toolbar * { box-sizing: border-box; }
+#wal-toolbar .wal-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: #ffd166;
+}
+#wal-toolbar .wal-title .wal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  display: inline-block;
+}
+#wal-toolbar button.wal-btn {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  background: #2d6cdf;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+#wal-toolbar button.wal-btn:hover { background: #1f57bf; }
+#wal-toolbar button.wal-btn:last-child { margin-bottom: 0; }
+#wal-toolbar button.wal-btn.wal-secondary {
+  background: #24345c;
+}
+#wal-toolbar button.wal-btn.wal-secondary:hover { background: #2d3f6e; }
+#wal-toolbar button.wal-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+#wal-toolbar .wal-status {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #c7d2e6;
+  line-height: 1.5;
+  max-height: 90px;
+  overflow-y: auto;
+}
+#wal-toolbar .wal-row-info {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #ffd166;
+}
+#wal-toolbar .wal-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  cursor: pointer;
+  color: #8ea0c7;
+  font-size: 13px;
+  line-height: 1;
+}
+#wal-toolbar .wal-close:hover { color: #fff; }
+#wal-toolbar { position: fixed; }
