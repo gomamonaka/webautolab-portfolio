@@ -4,21 +4,17 @@
  * 「一覧をCSV保存」「CSVから自動入力」を提供する。
  * CSV の読み書きは lib/csv.js の純粋関数 (WebAutoLabCSV) を利用する。
  */
-(function () {
+(async function () {
   "use strict";
 
-  var CSV_HEADERS = ["company", "person", "phone", "email", "plan", "note"];
-  var HEADER_LABEL = {
-    company: "会社名",
-    person: "担当者",
-    phone: "電話",
-    email: "メール",
-    plan: "プラン",
-    note: "備考"
-  };
-
-  var isIndexPage = !!document.getElementById("customerTable");
-  var isNewPage = !!document.getElementById("newCustomerForm");
+  var settings;
+  try { settings = await WebAutoLabSettings.read(); }
+  catch (_) { settings = structuredClone(WebAutoLabSettings.defaults); }
+  if (!WebAutoLabSettings.matches(location.href, settings.matches)) return;
+  var isIndexPage = !!document.querySelector(settings.tableSelector);
+  var isNewPage = settings.mappings.some(function (mapping) {
+    return !!document.querySelector(mapping.selector);
+  });
 
   // ------------------------------------------------------------------
   // ツールバー DOM 構築
@@ -36,7 +32,9 @@
       exportBtn.id = "wal-export-btn";
       exportBtn.textContent = "一覧をCSV保存";
       box.appendChild(exportBtn);
-      exportBtn.addEventListener("click", handleExportCSV);
+      exportBtn.addEventListener("click", function () {
+        try { handleExportCSV(); } catch (e) { log(e.message); }
+      });
     }
 
     if (isNewPage) {
@@ -101,22 +99,6 @@
   // ------------------------------------------------------------------
   // 顧客一覧: CSV エクスポート
   // ------------------------------------------------------------------
-  function scrapeTableRows() {
-    var trs = document.querySelectorAll("#customerTableBody tr");
-    var rows = [];
-    trs.forEach(function (tr) {
-      rows.push({
-        company: tr.getAttribute("data-company") || "",
-        person: tr.getAttribute("data-person") || "",
-        phone: tr.getAttribute("data-phone") || "",
-        email: tr.getAttribute("data-email") || "",
-        plan: "",
-        note: tr.getAttribute("data-status") || ""
-      });
-    });
-    return rows;
-  }
-
   function downloadTextFile(filename, text, mime) {
     var blob = new Blob([text], { type: mime || "text/csv;charset=utf-8" });
     var url = URL.createObjectURL(blob);
@@ -130,19 +112,21 @@
   }
 
   function handleExportCSV() {
-    // 一覧向けのヘッダ（日本語表示に合わせる）
-    var jaHeaders = ["会社名", "担当者", "電話", "メール", "ステータス", "最終更新"];
-    var trs = document.querySelectorAll("#customerTableBody tr");
-    var rows = [];
-    trs.forEach(function (tr) {
-      rows.push({
-        "会社名": tr.getAttribute("data-company") || "",
-        "担当者": tr.getAttribute("data-person") || "",
-        "電話": tr.getAttribute("data-phone") || "",
-        "メール": tr.getAttribute("data-email") || "",
-        "ステータス": tr.getAttribute("data-status") || "",
-        "最終更新": tr.getAttribute("data-updated") || ""
+    var table = document.querySelector(settings.tableSelector);
+    if (!table) throw new Error("対象テーブルが見つかりません。");
+    var header = table.querySelector(settings.headerSelector);
+    var jaHeaders = settings.columns.map(function (column) {
+      var cell = header && header.children[column.index - 1];
+      return column.name || (cell && cell.textContent.trim()) || String(column.index);
+    });
+    if (new Set(jaHeaders).size !== jaHeaders.length) throw new Error("CSV列名が重複しています。設定で列名を指定してください。");
+    var rows = Array.from(table.querySelectorAll(settings.rowSelector), function (tr) {
+      var row = Object.create(null);
+      settings.columns.forEach(function (column, i) {
+        var cell = tr.children[column.index - 1];
+        row[jaHeaders[i]] = column.attribute ? (tr.getAttribute(column.attribute) || "") : (cell ? cell.textContent.trim() : "");
       });
+      return row;
     });
     var csv = window.WebAutoLabCSV.toCSVWithBOM(rows, jaHeaders);
     downloadTextFile("customers_export.csv", csv);
@@ -168,7 +152,7 @@
         return;
       }
       document.getElementById("wal-next-btn").disabled = false;
-      document.getElementById("wal-all-btn").disabled = false;
+      document.getElementById("wal-all-btn").disabled = !document.getElementById("newCustomerForm") || !document.getElementById("submitBtn");
       log(importedRows.length + " 件のCSVを読み込みました。「次の行」または「全件登録」を押してください。");
       handleNextRow();
     };
@@ -177,8 +161,9 @@
   }
 
   function fillFormFromRow(row) {
-    CSV_HEADERS.forEach(function (key) {
-      var el = document.getElementById(key);
+    settings.mappings.forEach(function (mapping) {
+      var key = mapping.column;
+      var el = document.querySelector(mapping.selector);
       if (!el || row[key] === undefined) return;
       if (el.tagName === "SELECT") {
         el.value = row[key];
@@ -232,7 +217,7 @@
   }
 
   function handleRegisterAll() {
-    if (importedRows.length === 0) return;
+    if (importedRows.length === 0 || !document.getElementById("newCustomerForm") || !document.getElementById("submitBtn")) return;
     var allBtn = document.getElementById("wal-all-btn");
     var nextBtn = document.getElementById("wal-next-btn");
     allBtn.disabled = true;
@@ -268,8 +253,8 @@
     chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
       if (!msg) return;
       if (msg.action === "wal-export-csv" && isIndexPage) {
-        handleExportCSV();
-        sendResponse({ ok: true });
+        try { handleExportCSV(); sendResponse({ ok: true }); }
+        catch (e) { sendResponse({ ok: false, error: e.message }); }
       } else if (msg.action === "wal-open-import" && isNewPage) {
         var input = document.getElementById("wal-file-input");
         if (input) input.click();
@@ -283,5 +268,6 @@
   // ------------------------------------------------------------------
   if (isIndexPage || isNewPage) {
     buildToolbar();
+    if (!settings.toolbar) document.getElementById("wal-toolbar").style.display = "none";
   }
 })();

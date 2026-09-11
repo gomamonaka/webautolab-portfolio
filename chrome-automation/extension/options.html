@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<title>WebAutoLab 設定</title>
+<style>
+body { max-width: 900px; margin: 32px auto; padding: 0 20px; font: 15px/1.6 Meiryo, sans-serif; color: #243249; }
+label { display: block; margin: 12px 0; } input:not([type=checkbox]), textarea { box-sizing: border-box; width: 100%; padding: 8px; }
+table { width: 100%; } th { text-align: left; } button { padding: 8px 12px; margin: 5px; cursor: pointer; }
+fieldset { margin: 20px 0; border: 1px solid #bbc7d8; } #status { white-space: pre-wrap; } .actions { margin-top: 20px; }
+</style>
+<h1>自動化の設定</h1>
+<form id="settingsForm">
+<label>対象サイトのURLパターン（1行に1件）<textarea id="matches" rows="3" required></textarea></label>
+<p>http:// または https:// に対応します。* でワイルドカードを指定できます（例：https://*.example.com/crm/*）。localhost はポート番号も指定できます。</p>
+<fieldset><legend>一覧ページ</legend>
+<label>テーブルのCSSセレクター<input id="tableSelector" required></label>
+<label>ヘッダー行のCSSセレクター（テーブル内）<input id="headerSelector" required></label>
+<label>データ行のCSSセレクター（テーブル内）<input id="rowSelector" required></label>
+<p>下の順番で出力します。列番号は1から。列名が空欄の場合はヘッダー行のセルを使用します。行の属性を指定するとセルの文字列より優先します（デモの初期値は data-* 属性）。</p>
+<table><thead><tr><th>CSV列名</th><th>列番号</th><th>行の属性（任意）</th><th>操作</th></tr></thead><tbody id="columns"></tbody></table>
+<button type="button" id="addColumn">出力列を追加</button></fieldset>
+<fieldset><legend>フォームページ：CSV列名 → 入力CSSセレクター</legend>
+<p>指定した入力欄が見つかるページで自動入力を利用できます。</p>
+<table><thead><tr><th>CSV列名</th><th>入力CSSセレクター</th><th>操作</th></tr></thead><tbody id="mappings"></tbody></table>
+<button type="button" id="addMapping">入力対応を追加</button></fieldset>
+<label><input id="toolbar" type="checkbox"> フローティングツールバーを表示する</label>
+<button type="submit">設定を保存</button>
+</form>
+<div class="actions"><button id="reset">設定をリセット</button><button id="export">設定をJSONで書き出し</button><button id="import">設定をJSONで読み込み</button><input id="jsonFile" type="file" accept=".json,application/json" hidden></div>
+<p>JSON読み込みは編集欄に反映します。「設定を保存」で確定してください。保存・リセット後は対象ページを再読み込みしてください。ツールバー非表示時もポップアップからCSV操作ができます。</p>
+<p id="status" role="status" aria-live="polite"></p>
+<script src="settings.js"></script><script src="options.js"></script>
+</html>

@@ -3,7 +3,7 @@
  * アクティブタブが demo-crm の対応ページかを確認し、
  * 対応するアクションを content script にメッセージで依頼する。
  */
-(function () {
+(async function () {
   "use strict";
 
   var statusEl = document.getElementById("popupStatus");
@@ -14,6 +14,11 @@
     statusEl.textContent = text;
   }
 
+  document.getElementById("btnSettings").addEventListener("click", function () { chrome.runtime.openOptionsPage(); });
+  var settings;
+  try { settings = await WebAutoLabSettings.read(); }
+  catch (_) { settings = structuredClone(WebAutoLabSettings.defaults); }
+
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     var tab = tabs && tabs[0];
     if (!tab) {
@@ -21,9 +26,13 @@
       return;
     }
 
+    if (!tab.url || !WebAutoLabSettings.matches(tab.url, settings.matches)) {
+      setStatus("設定した対象URLのページで開いてください。");
+      return;
+    }
     chrome.tabs.sendMessage(tab.id, { action: "wal-ping" }, function (resp) {
       if (chrome.runtime.lastError || !resp) {
-        setStatus("demo-crm のページで開いてください。");
+        setStatus("対象ページを再読み込みしてください。");
         return;
       }
       if (resp.page === "index") {
@@ -42,8 +51,8 @@
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       var tab = tabs && tabs[0];
       if (!tab) return;
-      chrome.tabs.sendMessage(tab.id, { action: "wal-export-csv" }, function () {
-        setStatus("CSVをダウンロードしました。");
+      chrome.tabs.sendMessage(tab.id, { action: "wal-export-csv" }, function (resp) {
+        setStatus(chrome.runtime.lastError ? "通信できません。対象ページを再読み込みしてください。" : (!resp || !resp.ok ? (resp && resp.error || "CSV保存に失敗しました。") : "CSVをダウンロードしました。"));
       });
     });
   });
@@ -52,7 +61,8 @@
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       var tab = tabs && tabs[0];
       if (!tab) return;
-      chrome.tabs.sendMessage(tab.id, { action: "wal-open-import" }, function () {
+      chrome.tabs.sendMessage(tab.id, { action: "wal-open-import" }, function (resp) {
+        if (chrome.runtime.lastError || !resp || !resp.ok) { setStatus("通信できません。対象ページを再読み込みしてください。"); return; }
         window.close();
       });
     });
