@@ -780,7 +780,7 @@ def write_preview_csv(header: list[str], rows: list[dict], out_xlsx_path: str, n
 # ------------------------------------------------------------------
 # main
 # ------------------------------------------------------------------
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser(description="問い合わせ自由記述をAI分類しExcel化するツール")
     ap.add_argument("input", help="入力CSV/XLSXパス")
     ap.add_argument("--out", default=os.path.join("output", "result.xlsx"), help="出力Excelパス")
@@ -791,7 +791,7 @@ def main():
     ap.add_argument("--batch-size", type=int, default=20)
     ap.add_argument("--dry-run", action="store_true", help="APIを呼ばずレイアウトのみ確認")
     ap.add_argument("--no-cache", action="store_true", help="キャッシュを使わず全件呼び直す")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     t_start = time.time()
 

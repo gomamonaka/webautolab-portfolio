@@ -13,8 +13,12 @@ tkinterが使えない環境では、コンソールでのパス入力にフォ�
 import os
 import subprocess
 import sys
+import traceback
+from contextlib import redirect_stdout, redirect_stderr
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
+from classify_to_excel import main as classify_main
+
+ROOT = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__))
 
 
 def pick_input_path() -> str | None:
@@ -61,22 +65,28 @@ def main():
     input_path = pick_input_path()
     if not input_path:
         print("ファイルが選択されませんでした。終了します。")
-        input("Enterキーで終了...")
         return
 
     out_dir = os.path.join(ROOT, "output")
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, "result.xlsx")
 
-    cmd = [
-        sys.executable,
-        os.path.join(ROOT, "classify_to_excel.py"),
+    args = [
         input_path,
         "--out",
         out_path,
     ]
-    print("実行中:", " ".join(cmd))
-    result = subprocess.run(cmd, cwd=ROOT)
+    log_path = os.path.join(out_dir, "classify.log")
+    returncode = 0
+    with open(log_path, "w", encoding="utf-8") as log:
+        with redirect_stdout(log), redirect_stderr(log):
+            try:
+                classify_main(args)
+            except SystemExit as exc:
+                returncode = exc.code or 0
+            except Exception:
+                traceback.print_exc()
+                returncode = 1
 
     try:
         import tkinter as tk
@@ -85,18 +95,16 @@ def main():
         root = tk.Tk()
         root.withdraw()
         root.attributes("-topmost", True)
-        if result.returncode == 0:
+        if returncode == 0:
             messagebox.showinfo("完了", f"分類が完了しました。\n{out_path}", parent=root)
         else:
-            messagebox.showerror("エラー", "分類処理でエラーが発生しました。\nコンソールのログを確認してください。", parent=root)
+            messagebox.showerror("エラー", f"分類処理でエラーが発生しました。\nログを確認してください: {log_path}", parent=root)
         root.destroy()
     except Exception:
         pass
 
-    if result.returncode == 0:
+    if returncode == 0:
         open_folder(out_dir)
-    else:
-        input("エラーが発生しました。Enterキーで終了...")
 
 
 if __name__ == "__main__":

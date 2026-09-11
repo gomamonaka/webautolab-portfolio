@@ -1,58 +1,70 @@
-# build_exe.md — PyInstallerでexe化する手順（未実施・手順のみ）
+# Windows executable build
 
-納品先のPCにPython環境がない場合、`gui.py` を単体の `.exe` にまとめて配布できます。
-このドキュメントは手順の説明のみで、実際のビルドはまだ行っていません。
+Built on 2026-09-11 with Windows 11 x64, Python 3.12.10 and PyInstaller 6.15.0 (contrib hooks 2025.8). Destination PCs do not need Python.
 
-## 1. 依存関係をインストール
+## Exact commands
 
-```bat
-pip install pyinstaller openpyxl PyYAML anthropic
+Run from the project directory in PowerShell. `rtk proxy` is the workspace command wrapper; it can be omitted elsewhere.
+
+PyInstaller was already installed, so no pip installation was needed. Availability check:
+
+```powershell
+rtk proxy python -c "import sys, importlib.util; print(sys.version); print(sys.executable); print({m: bool(importlib.util.find_spec(m)) for m in ['PyInstaller', 'yaml', 'openpyxl', 'anthropic', 'openai', 'tkinter']})"
 ```
 
-（`openai` プロバイダを使う場合は `pip install openai` も追加）
+For a new environment, use `python -m pip install pyinstaller openpyxl PyYAML anthropic`. These builds **do not include the optional OpenAI SDK**: install `openai` and rebuild both executables before using that provider.
 
-## 2. ビルドコマンド（1ファイル・コンソール非表示）
+Initial build commands:
 
-```bat
-pyinstaller --onefile --noconsole --name "AI問い合わせ分類" ^
-    --add-data "rules.example.yaml;." ^
-    gui.py
+```powershell
+rtk proxy python -m PyInstaller --noconfirm --onefile --windowed --name classify_to_excel --add-data "rules.example.yaml;." gui.py
+rtk proxy python -m PyInstaller --noconfirm --onefile --console --name classify_cli --add-data "rules.example.yaml;." classify_to_excel.py
 ```
 
-- `--onefile`: 1つのexeにまとめる
-- `--noconsole`: コンソールウィンドウを出さない（GUIのみ）。エラー内容を見たい場合は
-  一時的に `--console` に変えてビルドし直すとログが見える
-- `--add-data "rules.example.yaml;."`: ルール定義ファイルをexeに同梱
+The initial GUI build excluded Tkinter: the build-time Tcl probe could not read `init.tcl`, although Python could read it. The final GUI rebuild retains Tkinter using the checked-in hook and explicitly bundles the matching Tcl/Tk data:
 
-生成物は `dist/AI問い合わせ分類.exe` にできます。
+```powershell
+rtk proxy python -m PyInstaller --noconfirm --clean --onefile --windowed --name classify_to_excel --additional-hooks-dir pyinstaller_hooks --add-data "rules.example.yaml;." --add-data "C:/Users/gomam/AppData/Local/Programs/Python/Python312/tcl/tcl8.6;_tcl_data" --add-data "C:/Users/gomam/AppData/Local/Programs/Python/Python312/tcl/tk8.6;_tk_data" gui.py
+```
 
-## 3. classify_to_excel.py もまとめて同梱する場合
+Adjust the two absolute Tcl/Tk paths for another build interpreter. Use runtime data from the same Python installation.
 
-`gui.py` は `subprocess.run([sys.executable, "classify_to_excel.py", ...])` で
-別プロセスを呼び出す設計のため、exe化する場合は以下のいずれかの対応が必要です。
+## Outputs
 
-- **A（簡単）**: `dist/` フォルダに `classify_to_excel.py` と `rules.example.yaml` を
-  同じフォルダに置いて配布する（exeと同じフォルダにPythonスクリプトを置く運用）。
-  この場合、配布先PCにも別途Pythonが必要になる点に注意。
-- **B（完全スタンドアロン）**: `classify_to_excel.py` の `main()` をモジュールとして
-  `import` し、`subprocess.run` の代わりに直接関数呼び出しする形にリファクタリングして
-  1つのexeにまとめる。配布先PCにPythonが不要になる。
+- `dist/classify_to_excel.exe`: windowed, onefile GUI; classifier, default rules and Tcl/Tk included. Does not require the CLI exe alongside it.
+- `dist/classify_cli.exe`: console, onefile CLI with default rules.
+- `classify_to_excel.spec`, `classify_cli.spec`, and `build/`: generated intermediates.
+- `.gitignore`: ignores `build/`, `dist/`, `*.spec`, and `__pycache__/`.
+- `pyinstaller_hooks/pre_find_module_path/hook-tkinter.py`: retains Tkinter despite the restricted build-time probe.
 
-社内配布・単発案件であれば A で十分です。継続的に販売するツールにする場合は B を推奨します。
+The GUI calls the imported classifier directly instead of launching a Python script through the frozen executable. The classifier's `main(argv=None)` preserves normal CLI parsing. GUI output and logs are saved beside the executable at `output/result.xlsx` and `output/classify.log`; use a writable folder. Cancelling the picker exits without a console prompt. The GUI has no CLI passthrough.
 
-## 4. 動作確認チェックリスト
+Default rules are read from the onefile extraction directory using `__file__`. CLI users can override them with `--rules path/to/rules.yaml`. Relative CLI output paths resolve against the working directory.
 
-- [ ] `dist/AI問い合わせ分類.exe` をダブルクリックし、ファイル選択ダイアログが出るか
-- [ ] サンプルCSV（`input/inquiries.csv`）を選んで正常に `output/result.xlsx` が生成されるか
-- [ ] `ANTHROPIC_API_KEY` 等の環境変数が配布先PCに設定されているか（未設定なら
-      `--provider claude-cli` は使えないので、事前にAPIキーの取得・設定案内が必要）
-- [ ] Windows Defender / SmartScreen の警告が出た場合の案内文を用意する
-      （署名なしexeは初回実行時に警告が出ることが多い）
+## Verification
 
-## 5. 配布時の注意
+```powershell
+rtk proxy .\dist\classify_cli.exe --help
+rtk proxy .\dist\classify_cli.exe input\inquiries.csv --out build\smoke\result.xlsx --dry-run --no-cache --provider anthropic
+rtk git diff --check
+rtk git check-ignore build/ dist/ classify_cli.spec classify_to_excel.spec
+```
 
-- APIキーをexeやコードに埋め込まない。実行時に環境変数 or 初回起動時の設定画面で
-  入力させる方式にすること。
-- `--provider claude-cli` はオーナーのClaude Codeサブスクリプションを使う開発者向けの
-  デモ生成専用フォールバックです。**エンドユーザー配布版では anthropic または openai
-  プロバイダを既定にし、claude-cli は使わないこと。**
+Both executable invocations exited **0**. The dry run processed 100 rows with `api_calls=0` and `cost=$0.0000`. Reopening the workbook with openpyxl confirmed 100 data rows, `dry-run=True`, and zero API calls. It also generated `build/smoke/result_preview.csv`. No paid API or Claude CLI calls were made.
+
+GUI interactive operation and live provider requests have not been tested. Japanese help text may look garbled with a mismatched console encoding. GUI processing is synchronous and may appear busy.
+
+## Caveats
+
+- Executables are unsigned; Windows SmartScreen may warn about an unrecognized publisher. Consider signing for distribution.
+- Antivirus products can flag PyInstaller onefile executables falsely. Verify provenance and submit suspected false positives to the vendor; do not disable protection globally.
+- Onefile executables extract into temporary storage on startup, requiring writable temporary space and adding startup time.
+- Credentials are not bundled. Live classification requires environment variables and can incur provider charges.
+- Existing provider selection chooses Anthropic for `ANTHROPIC_API_KEY`, OpenAI for only `OPENAI_API_KEY`, otherwise external `claude`. The optional OpenAI SDK is absent from these builds. Claude CLI requires separate installation/authentication and is intended for the existing developer demo workflow; configure a supported API provider for end-user use.
+
+## Executable sizes
+
+- dist/classify_to_excel.exe: 45,583,086 bytes (43.47 MiB).
+- dist/classify_cli.exe: 42,287,990 bytes (40.33 MiB).
+
+Archive inspection confirmed the rules in both executables and _tkinter.pyd, Tcl and Tk data in the GUI executable.
