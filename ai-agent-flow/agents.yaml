@@ -1,0 +1,29 @@
+agents:
+  - name: research
+    stage: 1
+    input_contract: [topic, audience]
+    output_contract: [findings]
+    prompt_template: 'SNS調査案を作成。実際に検索したとは主張しない。入力: {payload}'
+    next_stage: summarize
+    max_retries: 2
+  - name: summarize
+    stage: 2
+    input_contract: [topic, audience, findings]
+    output_contract: [summary]
+    prompt_template: 'SNS調査案を対象読者向けに要約。入力: {payload}'
+    next_stage: publish_portal
+    max_retries: 2
+  - name: publish_portal
+    stage: 3
+    input_contract: [topic, summary]
+    output_contract: [portal_draft]
+    prompt_template: 'ポータル掲載用の原稿を作成。外部公開は行わない。入力: {payload}'
+    next_stage: verify
+    max_retries: 2
+  - name: verify
+    stage: 4
+    input_contract: [summary, portal_draft]
+    output_contract: [verification]
+    prompt_template: '要約と掲載原稿の整合性を確認し、確認結果を記述。入力: {payload}'
+    next_stage: null
+    max_retries: 2

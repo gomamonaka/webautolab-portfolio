@@ -1,0 +1,23 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<title>AI業務フロー ダッシュボード</title><style>
+body{font-family:system-ui,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;margin:24px;color:#1b2733;background:#f7f9fb}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:28px 0 8px}
+.meta{color:#5b6b7b;font-size:12px}.kpi{display:inline-block;background:#fff;border:1px solid #dde5ec;
+border-radius:8px;padding:12px 18px;margin:12px 12px 0 0}.kpi b{display:block;font-size:24px}
+table{border-collapse:collapse;background:#fff;font-size:13px}
+th,td{border:1px solid #dde5ec;padding:6px 10px;text-align:left}th{background:#eef3f7}
+.empty{color:#5b6b7b;font-size:13px}.warn{color:#b3261e}</style></head><body>
+<h1>AI業務フロー ダッシュボード</h1>
+<p class="meta">生成時刻 2026-09-12 09:33:07 / 「処理中」が30分以上続くタスクは滞留として表示します</p>
+<div class="kpi">本日の完了処理<b>20</b></div>
+<div class="kpi">失敗（要対応）<b class="warn">1</b></div>
+<div class="kpi">滞留タスク<b class="">0</b></div>
+<h2>AI社員ごとの状況</h2>
+<table><thead><tr><th>担当（ステージ）</th><th>未処理</th><th>処理中</th><th>完了</th><th>失敗</th></tr></thead><tbody><tr><td>research</td><td>0</td><td>0</td><td>0</td><td>1</td></tr><tr><td>summarize</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>publish_portal</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>verify</td><td>0</td><td>0</td><td>5</td><td>0</td></tr><tr><td>合計</td><td>0</td><td>0</td><td>5</td><td>1</td></tr></tbody></table>
+<h2>滞留しているタスク</h2>
+<p class="empty">滞留なし</p>
+<h2>失敗したタスク</h2>
+<table><thead><tr><th>タスクID</th><th>担当</th><th>リトライ</th><th>最後のエラー</th></tr></thead><tbody><tr><td>6</td><td>research</td><td>3</td><td>Missing required keys: audience</td></tr></tbody></table>
+<h2>直近の実行履歴</h2>
+<table><thead><tr><th>開始</th><th>終了</th><th>担当</th><th>タスクID</th><th>結果</th><th>エラー</th></tr></thead><tbody><tr><td>2026-09-12T00:33:06+00:00</td><td>2026-09-12T00:33:06+00:00</td><td>research</td><td>6</td><td>失敗</td><td>Missing required keys: audience</td></tr><tr><td>2026-09-12T00:33:06+00:00</td><td>2026-09-12T00:33:06+00:00</td><td>research</td><td>6</td><td>失敗</td><td>Missing required keys: audience</td></tr><tr><td>2026-09-12T00:33:06+00:00</td><td>2026-09-12T00:33:06+00:00</td><td>research</td><td>6</td><td>失敗</td><td>Missing required keys: audience</td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>verify</td><td>5</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>verify</td><td>4</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>verify</td><td>3</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>verify</td><td>2</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>verify</td><td>1</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>publish_portal</td><td>5</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>publish_portal</td><td>4</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>publish_portal</td><td>3</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>publish_portal</td><td>2</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>publish_portal</td><td>1</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>summarize</td><td>5</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>summarize</td><td>4</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>summarize</td><td>3</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>summarize</td><td>2</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>summarize</td><td>1</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>research</td><td>5</td><td>完了</td><td></td></tr><tr><td>2026-09-12T00:33:04+00:00</td><td>2026-09-12T00:33:04+00:00</td><td>research</td><td>4</td><td>完了</td><td></td></tr></tbody></table>
+</body></html>
