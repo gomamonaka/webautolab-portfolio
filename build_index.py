@@ -454,6 +454,33 @@ def build_books_section():
     }
 
 
+def build_ai_agent_flow_section():
+    with open(os.path.join(ROOT, "ai-agent-flow", "README.md"), encoding="utf-8") as f:
+        readme = f.read()
+
+    rules_block = readme.split("## 設計の4つのルール\n", 1)[1].split("\n## ", 1)[0]
+    rules = re.findall(r"^\d+\. \*\*(.+?)\*\*：(.+)$", rules_block, re.MULTILINE)
+    if len(rules) != 4:
+        raise ValueError("AI社員パイプラインの設計ルールは4点必要です")
+    rules_table = table_html(
+        ["設計の4ルール", "内容"],
+        [(title, detail.replace("`", "")) for title, detail in rules],
+    )
+
+    results_block = readme.split("## 実行結果の例\n", 1)[1].split("\n## ", 1)[0]
+    output = results_block.split("```text\n", 1)[1].split("```", 1)[0]
+    # 実測の出力行をそのまま抜粋（コマンド・ローカル絶対パスは掲載しない）。
+    prefixes = ("Seeded ", "research:", "summarize:", "publish_portal:",
+                "verify:", "SUMMARY ", "task=", "{'pending':", '{"task_id":')
+    lines = [line for line in output.splitlines() if line.startswith(prefixes)]
+    if not lines:
+        raise ValueError("AI社員パイプラインの実行結果が見つかりません")
+    return {
+        "ai_agent_flow_rules_table": rules_table,
+        "ai_agent_flow_log": "\n".join(esc(line) for line in lines),
+    }
+
+
 def main():
     with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
         template = f.read()
@@ -464,6 +491,7 @@ def main():
     ctx.update(build_repair_section())
     ctx.update(build_excel_section())
     ctx.update(build_books_section())
+    ctx.update(build_ai_agent_flow_section())
 
     out = template
     for key, value in ctx.items():

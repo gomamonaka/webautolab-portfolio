@@ -74,6 +74,11 @@
           <span class="name">動かないGAS・Python・Nodeツールの復旧</span>
           <span class="res">15,000円〜/3日</span>
         </li>
+        <li>
+          <span class="idx">04</span>
+          <span class="name">AIエージェント業務フロー(AI社員パイプライン)</span>
+          <span class="res">参照実装</span>
+        </li>
       </ul>
 
       <div class="hero-ctas">
@@ -359,6 +364,44 @@
           <a class="btn-sm btn-ghost" href="scraper/README.md" target="_blank" rel="noopener">READMEを見る</a>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="ai-agent-flow">
+  <div class="wrap">
+    <div class="section-head">
+      <div><span class="kicker">DEMO</span></div>
+      <div>
+        <h2 class="section-title reveal">AIエージェント業務フロー(AI社員パイプライン)</h2>
+        <p class="section-lead reveal">4役のAI(リサーチ→まとめ→ポータル反映→確認)がSQLiteのキュー経由でタスクを受け渡す参照実装。定期実行はOSのスケジューラから1つの入口を叩く形。実行履歴、リトライ、失敗時の通知、状態ダッシュボードを含む。</p>
+      </div>
+    </div>
+    <div class="case-list">
+      <article class="case" aria-labelledby="ai-agent-flow-result-title">
+        <p class="case-desc reveal">調査案→要約→掲載原稿→整合性確認を順に処理します。実際の検索や外部公開は行いません。stubプロバイダではAIへの通信・API課金なしで処理の流れを確認できます。</p>
+
+        <div class="case-shot reveal">
+          <img src="assets/16_ai_agent_flow.png" alt="AI社員タスクパイプラインの構成図" loading="lazy">
+          <div class="case-shot-cap">AI社員タスクパイプラインの構成</div>
+        </div>
+
+        <div class="subtable-title">設計の4ルール</div>
+        <div class="table-scroll">{{ai_agent_flow_rules_table}}</div>
+
+        <h3 class="case-title reveal" id="ai-agent-flow-result-title">実行結果（stubプロバイダ）</h3>
+        <p class="case-desc reveal">READMEに記録したクリーン実行の出力を抜粋。5件完了し、必須キー不足の1件は3回試行後にfailedとなり、通知ログに記録されました。検証時はSMTP_HOSTを未設定にしています。</p>
+        <div class="log-panel reveal">
+          <div class="log-panel-head"><span class="browser-dots"><span></span><span></span><span></span></span>README.md / 実行結果の例（抜粋）</div>
+          <pre>{{ai_agent_flow_log}}</pre>
+        </div>
+
+        <div class="case-actions">
+          <a class="btn-sm btn-dark" href="ai-agent-flow/dashboard_sample.html" target="_blank" rel="noopener">ダッシュボードの実例を見る ↗</a>
+          <a class="btn-sm btn-ghost" href="ai-agent-flow/README.md" target="_blank" rel="noopener">READMEを見る（手順）</a>
+          <a class="btn-sm btn-ghost" href="ai-agent-flow/agents.yaml" target="_blank" rel="noopener">役割定義を見る</a>
+        </div>
+      </article>
     </div>
   </div>
 </section>
