@@ -26,7 +26,10 @@ Chrome拡張機能（Manifest V3）で、一覧ページのCSV保存と、CSVか
 ### 6. [ai-agent-flow](ai-agent-flow/) — AI社員タスクパイプライン
 調査→要約→原稿→整合性確認を役割別エージェントで順に処理するPythonの参照実装。SQLiteキュー、入出力契約の検証、失敗時の再試行と通知、状態を確認できるHTMLダッシュボード付き。API課金なしで流れを確認できるstubモードがあります。
 
-### 7. [lp-sample](lp-sample/) — LP制作サンプル
+### 7. [gas-invoice](gas-invoice/) — 請求書の自動発行（Google Apps Script）
+スプレッドシートの請求データから、請求書PDFの生成とGmail下書き（PDF添付）の作成までを自動化するGASのデモ。請求先ごとのグループ化・請求書番号の採番・消費税計算・処理ログつきで、送信はせず下書きまでに留める安全設計です。
+
+### 8. [lp-sample](lp-sample/) — LP制作サンプル
 ランディングページの制作サンプル（HTML/CSS）です。
 
 ## 進め方
