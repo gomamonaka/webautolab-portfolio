@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="826" viewBox="0 0 1240 826" font-family="'Noto Sans JP','Hiragino Sans',sans-serif">
+<rect width="1240" height="826" fill="#ffffff"/>
+<rect width="1240" height="92" fill="#0f2a43"/>
+<text x="30" y="58" font-size="30" font-weight="bold" fill="#ffffff">CSVクリーニング Before / After（実データで実行）</text>
+<rect x="20" y="108" width="1200" height="40" fill="#b2541e"/>
+<text x="36" y="136" font-size="23" font-weight="bold" fill="#ffffff">Before：元のCSV（令和日付・全角・単位つき金額・表記ゆれ）</text>
+<rect x="20" y="156" width="1200" height="44" fill="#eef2f5"/>
+<text x="34" y="185" font-size="20" font-weight="bold" fill="#282828">日付</text>
+<text x="224" y="185" font-size="20" font-weight="bold" fill="#282828">顧客名</text>
+<text x="514" y="185" font-size="20" font-weight="bold" fill="#282828">商品名</text>
+<text x="734" y="185" font-size="20" font-weight="bold" fill="#282828">数量</text>
+<text x="804" y="185" font-size="20" font-weight="bold" fill="#282828">単価</text>
+<text x="924" y="185" font-size="20" font-weight="bold" fill="#282828">担当者</text>
+<text x="34" y="229" font-size="19" fill="#1e1e1e">令和8年12月20日</text>
+<text x="224" y="229" font-size="19" fill="#1e1e1e">オカモト印刷株式会社</text>
+<text x="514" y="229" font-size="19" fill="#1e1e1e">印刷用紙Ａ４</text>
+<text x="734" y="229" font-size="19" fill="#1e1e1e">31</text>
+<text x="804" y="229" font-size="19" fill="#1e1e1e">450円</text>
+<text x="924" y="229" font-size="19" fill="#1e1e1e">渡辺</text>
+<line x1="20" y1="244" x2="1220" y2="244" stroke="#d2dae0"/>
+<text x="34" y="273" font-size="19" fill="#1e1e1e">2026/7/15</text>
+<text x="224" y="273" font-size="19" fill="#1e1e1e">株式会社ニシムラ</text>
+<text x="514" y="273" font-size="19" fill="#1e1e1e">コーヒー豆</text>
+<text x="734" y="273" font-size="19" fill="#1e1e1e">24</text>
+<text x="804" y="273" font-size="19" fill="#1e1e1e">1200</text>
+<text x="924" y="273" font-size="19" fill="#1e1e1e">鈴木</text>
+<line x1="20" y1="288" x2="1220" y2="288" stroke="#d2dae0"/>
+<text x="34" y="317" font-size="19" fill="#1e1e1e">2026/7/20</text>
+<text x="224" y="317" font-size="19" fill="#1e1e1e">アオキ酒店</text>
+<text x="514" y="317" font-size="19" fill="#1e1e1e">醤油</text>
+<text x="734" y="317" font-size="19" fill="#1e1e1e">47</text>
+<text x="804" y="317" font-size="19" fill="#1e1e1e">¥380</text>
+<text x="924" y="317" font-size="19" fill="#1e1e1e">伊藤</text>
+<line x1="20" y1="332" x2="1220" y2="332" stroke="#d2dae0"/>
+<text x="34" y="361" font-size="19" fill="#1e1e1e">令和8年1月10日</text>
+<text x="224" y="361" font-size="19" fill="#1e1e1e">株式会社ニシムラ</text>
+<text x="514" y="361" font-size="19" fill="#1e1e1e">印刷用紙A4</text>
+<text x="734" y="361" font-size="19" fill="#1e1e1e">50</text>
+<text x="804" y="361" font-size="19" fill="#1e1e1e">450</text>
+<text x="924" y="361" font-size="19" fill="#1e1e1e">田中</text>
+<line x1="20" y1="376" x2="1220" y2="376" stroke="#d2dae0"/>
+<polygon points="604,392 636,392 620,418" fill="#17708c"/>
+<rect x="20" y="432" width="1200" height="40" fill="#17708c"/>
+<text x="36" y="460" font-size="23" font-weight="bold" fill="#ffffff">After：クリーニング後（日付統一・数値化・売上を自動計算）</text>
+<rect x="20" y="480" width="1200" height="44" fill="#eef2f5"/>
+<text x="34" y="509" font-size="20" font-weight="bold" fill="#282828">日付</text>
+<text x="184" y="509" font-size="20" font-weight="bold" fill="#282828">顧客名</text>
+<text x="454" y="509" font-size="20" font-weight="bold" fill="#282828">商品名</text>
+<text x="654" y="509" font-size="20" font-weight="bold" fill="#282828">数量</text>
+<text x="714" y="509" font-size="20" font-weight="bold" fill="#282828">単価</text>
+<text x="814" y="509" font-size="20" font-weight="bold" fill="#282828">売上</text>
+<text x="924" y="509" font-size="20" font-weight="bold" fill="#282828">担当者</text>
+<text x="34" y="553" font-size="19" fill="#1e1e1e">2026-12-20</text>
+<text x="184" y="553" font-size="19" fill="#1e1e1e">オカモト印刷株式会社</text>
+<text x="454" y="553" font-size="19" fill="#1e1e1e">印刷用紙A4</text>
+<text x="654" y="553" font-size="19" fill="#1e1e1e">31</text>
+<text x="714" y="553" font-size="19" fill="#1e1e1e">450</text>
+<text x="814" y="553" font-size="19" fill="#1e1e1e">13950</text>
+<text x="924" y="553" font-size="19" fill="#1e1e1e">渡辺</text>
+<line x1="20" y1="568" x2="1220" y2="568" stroke="#d2dae0"/>
+<text x="34" y="597" font-size="19" fill="#1e1e1e">2026-07-15</text>
+<text x="184" y="597" font-size="19" fill="#1e1e1e">株式会社ニシムラ</text>
+<text x="454" y="597" font-size="19" fill="#1e1e1e">コーヒー豆</text>
+<text x="654" y="597" font-size="19" fill="#1e1e1e">24</text>
+<text x="714" y="597" font-size="19" fill="#1e1e1e">1200</text>
+<text x="814" y="597" font-size="19" fill="#1e1e1e">28800</text>
+<text x="924" y="597" font-size="19" fill="#1e1e1e">鈴木</text>
+<line x1="20" y1="612" x2="1220" y2="612" stroke="#d2dae0"/>
+<text x="34" y="641" font-size="19" fill="#1e1e1e">2026-07-20</text>
+<text x="184" y="641" font-size="19" fill="#1e1e1e">アオキ酒店</text>
+<text x="454" y="641" font-size="19" fill="#1e1e1e">醤油</text>
+<text x="654" y="641" font-size="19" fill="#1e1e1e">47</text>
+<text x="714" y="641" font-size="19" fill="#1e1e1e">380</text>
+<text x="814" y="641" font-size="19" fill="#1e1e1e">17860</text>
+<text x="924" y="641" font-size="19" fill="#1e1e1e">伊藤</text>
+<line x1="20" y1="656" x2="1220" y2="656" stroke="#d2dae0"/>
+<text x="34" y="685" font-size="19" fill="#1e1e1e">2026-01-10</text>
+<text x="184" y="685" font-size="19" fill="#1e1e1e">株式会社ニシムラ</text>
+<text x="454" y="685" font-size="19" fill="#1e1e1e">印刷用紙A4</text>
+<text x="654" y="685" font-size="19" fill="#1e1e1e">50</text>
+<text x="714" y="685" font-size="19" fill="#1e1e1e">450</text>
+<text x="814" y="685" font-size="19" fill="#1e1e1e">22500</text>
+<text x="924" y="685" font-size="19" fill="#1e1e1e">田中</text>
+<line x1="20" y1="700" x2="1220" y2="700" stroke="#d2dae0"/>
+<rect x="20" y="716" width="1200" height="90" fill="#f0f7fa" stroke="#17708c" stroke-width="2"/>
+<text x="40" y="752" font-size="23" font-weight="bold" fill="#0f2a43">実測（サンプル304行を実行）： 276行に整理 ／ 修正 800件超 ／ 処理 0.6秒</text>
+<text x="40" y="786" font-size="20" fill="#46505a">手作業なら約3.5時間分（1件15秒換算）の作業を自動化</text>
+</svg>
